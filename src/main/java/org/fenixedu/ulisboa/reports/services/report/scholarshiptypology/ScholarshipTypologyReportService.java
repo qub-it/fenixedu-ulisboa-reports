@@ -25,9 +25,8 @@ public class ScholarshipTypologyReportService {
 
     private Predicate<ScholarshipTypologyReport> filterPredicate() {
         Predicate<ScholarshipTypologyReport> result = r -> true;
-        
-        Predicate<ScholarshipTypologyReport> hasPersonalIngressionDataFilter = 
-                r -> r.getPersonalIngressionData() != null;
+
+        Predicate<ScholarshipTypologyReport> hasPersonalIngressionDataFilter = r -> r.getPersonalIngressionData() != null;
         result = result.and(hasPersonalIngressionDataFilter);
 
         return result;
@@ -50,16 +49,12 @@ public class ScholarshipTypologyReportService {
 
         final Set<Registration> result = Sets.newHashSet();
 
-        // NOTE: inclui matrículas anuladas/abandonadas
-        final boolean withoutEnrolments = true; 
-        if (withoutEnrolments) {
-            // registration/start execution year relation
-            result.addAll(executionYear.getStudentsSet().stream().collect(Collectors.toSet()));
-        }
+        // registration/start execution year relation
+        result.addAll(executionYear.getStudentsSet());
 
-        result.addAll(executionYear.getExecutionPeriodsSet().stream().flatMap(semester -> semester.getEnrolmentsSet().stream()
-                .filter(enrolment -> withoutEnrolments || !enrolment.isAnnulled()).map(enrolment -> enrolment.getRegistration())
-                .filter(registration -> RegistrationDataServices.getRegistrationData(registration, executionYear) != null))
+        result.addAll(executionYear.getExecutionPeriodsSet().stream()
+                .flatMap(semester -> semester.getEnrolmentsSet().stream().map(enrolment -> enrolment.getRegistration()).filter(
+                        registration -> RegistrationDataServices.getRegistrationData(registration, executionYear) != null))
                 .collect(Collectors.toSet()));
 
         return result;
@@ -69,5 +64,5 @@ public class ScholarshipTypologyReportService {
         final ScholarshipTypologyReport result = new ScholarshipTypologyReport(registration, executionYear);
         return result;
     }
-    
+
 }

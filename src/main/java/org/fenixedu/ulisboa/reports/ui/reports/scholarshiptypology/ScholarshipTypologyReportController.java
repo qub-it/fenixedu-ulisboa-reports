@@ -2,15 +2,9 @@ package org.fenixedu.ulisboa.reports.ui.reports.scholarshiptypology;
 
 import java.io.IOException;
 import java.text.Normalizer;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -18,22 +12,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.fenixedu.academic.domain.DomainObjectUtil;
-import org.fenixedu.academic.domain.Enrolment;
-import org.fenixedu.academic.domain.EnrolmentEvaluation;
-import org.fenixedu.academic.domain.ExecutionSemester;
-import org.fenixedu.academic.domain.ExecutionYear;
-import org.fenixedu.academic.domain.candidacy.StudentCandidacy;
-import org.fenixedu.academic.domain.degreeStructure.ProgramConclusion;
-import org.fenixedu.academic.domain.student.Registration;
-import org.fenixedu.academic.domain.student.StudentStatute;
-import org.fenixedu.academic.domain.student.curriculum.Curriculum;
-import org.fenixedu.academic.domain.student.curriculum.ICurriculum;
-import org.fenixedu.academic.domain.student.curriculum.ICurriculumEntry;
-import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
-import org.fenixedu.academic.domain.studentCurriculum.Dismissal;
-import org.fenixedu.academic.dto.student.RegistrationConclusionBean;
-import org.fenixedu.academic.util.MultiLanguageString;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.spring.portal.SpringFunctionality;
 import org.fenixedu.commons.spreadsheet.SheetData;
@@ -41,22 +19,12 @@ import org.fenixedu.commons.spreadsheet.SpreadsheetBuilderForXLSX;
 import org.fenixedu.ulisboa.reports.domain.exceptions.ULisboaReportsDomainException;
 import org.fenixedu.ulisboa.reports.dto.report.scholarshiptypology.ScholarshipTypologyReportParametersBean;
 import org.fenixedu.ulisboa.reports.services.report.scholarshiptypology.ScholarshipTypologyReport;
+import org.fenixedu.ulisboa.reports.services.report.scholarshiptypology.ScholarshipTypologyReportService;
 import org.fenixedu.ulisboa.reports.ui.FenixeduULisboaReportsBaseController;
 import org.fenixedu.ulisboa.reports.ui.FenixeduULisboaReportsController;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
-import org.fenixedu.ulisboa.specifications.domain.CompetenceCourseServices;
-import org.fenixedu.ulisboa.specifications.domain.evaluation.EvaluationComparator;
-import org.fenixedu.ulisboa.specifications.domain.evaluation.season.EvaluationSeasonServices;
 import org.fenixedu.ulisboa.specifications.domain.file.ULisboaSpecificationsTemporaryFile;
-import org.fenixedu.ulisboa.specifications.domain.services.CurricularPeriodServices;
-import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
-import org.fenixedu.ulisboa.specifications.domain.services.enrollment.EnrolmentServices;
-import org.fenixedu.ulisboa.specifications.ui.registrationsdgesexport.RegistrationDGESStateBeanController;
-import org.fenixedu.ulisboa.specifications.ui.registrationsdgesexport.RegistrationDGESStateBeanController.RegistrationDGESStateBean;
-import org.fenixedu.ulisboa.reports.services.report.scholarshiptypology.ScholarshipTypologyReportService;
-
 import org.joda.time.DateTime;
-import org.joda.time.YearMonthDay;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -67,21 +35,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
-
 import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
-@SpringFunctionality(app = FenixeduULisboaReportsController.class, title = "label.title.reports.scholarshipTypology", accessGroup = "logged")
+@SpringFunctionality(app = FenixeduULisboaReportsController.class, title = "label.title.reports.scholarshipTypology",
+        accessGroup = "logged")
 @RequestMapping(ScholarshipTypologyReportController.CONTROLLER_URL)
 public class ScholarshipTypologyReportController extends FenixeduULisboaReportsBaseController {
 
-    public static final String CONTROLLER_URL =
-            "/fenixedu-ulisboa-reports/reports/scholarshiptypology/scholarshiptypologyreport";
+    public static final String CONTROLLER_URL = "/fenixedu-ulisboa-reports/reports/scholarshiptypology/scholarshiptypologyreport";
 
     private static final String JSP_PATH = CONTROLLER_URL.substring(1);
 
@@ -176,9 +139,8 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
         try {
             content = reportProcessor.apply(bean);
         } catch (Throwable e) {
-            content = createXLSWithError(
-                    e instanceof ULisboaReportsDomainException ? ((ULisboaReportsDomainException) e)
-                            .getLocalizedMessage() : ExceptionUtils.getFullStackTrace(e));
+            content = createXLSWithError(e instanceof ULisboaReportsDomainException ? ((ULisboaReportsDomainException) e)
+                    .getLocalizedMessage() : ExceptionUtils.getFullStackTrace(e));
         }
 
         ULisboaSpecificationsTemporaryFile.create(reportId, content, Authenticate.getUser());
@@ -245,78 +207,65 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
                         addData("ScholarshipTypologyReport.fatherProfessionalCondition", getFatherProfessionalCondition(report));
                         addData("ScholarshipTypologyReport.householdSalarySpan", getHouseholdSalarySpan(report));
                     }
-                    
+
                     private String getProfessionalCondition(ScholarshipTypologyReport report) {
-                        return report.getProfessionalCondition() != null ? 
-                                report.getProfessionalCondition().getLocalizedName() : null;
+                        return report.getProfessionalCondition() != null ? report.getProfessionalCondition()
+                                .getLocalizedName() : null;
                     }
-                    
+
                     private String getProfessionalType(ScholarshipTypologyReport report) {
-                        return report.getProfessionalType() != null ? 
-                                report.getProfessionalType().getLocalizedName() : null;
+                        return report.getProfessionalType() != null ? report.getProfessionalType().getLocalizedName() : null;
                     }
-                    
+
                     private String getProfessionTimeType(ScholarshipTypologyReport report) {
-                        return report.getProfessionTimeType() != null ? 
-                                report.getProfessionTimeType().getLocalizedName() : null;
+                        return report.getProfessionTimeType() != null ? report.getProfessionTimeType().getLocalizedName() : null;
                     }
-                    
+
                     private String getGrantOwnerType(ScholarshipTypologyReport report) {
-                        return report.getGrantOwnerType() != null ? 
-                                ULisboaReportsUtil.bundle("label.GrantOwnerType." + report.getGrantOwnerType())
-                                : null;
+                        return report.getGrantOwnerType() != null ? ULisboaReportsUtil
+                                .bundle("label.GrantOwnerType." + report.getGrantOwnerType()) : null;
                     }
-                    
+
                     private String getGrantOwnerProvider(ScholarshipTypologyReport report) {
-                        return report.getGrantOwnerProvider() != null ? 
-                                report.getGrantOwnerProvider().getNameI18n().getContent() : null;
+                        return report.getGrantOwnerProvider() != null ? report.getGrantOwnerProvider().getNameI18n()
+                                .getContent() : null;
                     }
-                    
+
                     private String getMotherSchoolLevel(ScholarshipTypologyReport report) {
-                        return report.getMotherSchoolLevel() != null ? 
-                                report.getMotherSchoolLevel().getLocalizedName() : null;
+                        return report.getMotherSchoolLevel() != null ? report.getMotherSchoolLevel().getLocalizedName() : null;
                     }
-                    
+
                     private String getMotherProfessionType(ScholarshipTypologyReport report) {
-                        return report.getMotherProfessionType() != null ? 
-                                report.getMotherProfessionType().getLocalizedName() : null;
+                        return report.getMotherProfessionType() != null ? report.getMotherProfessionType()
+                                .getLocalizedName() : null;
                     }
-                    
+
                     private String getMotherProfessionalCondition(ScholarshipTypologyReport report) {
-                        return report.getMotherProfessionalCondition() != null ? 
-                                report.getMotherProfessionalCondition().getLocalizedName() : null;
+                        return report.getMotherProfessionalCondition() != null ? report.getMotherProfessionalCondition()
+                                .getLocalizedName() : null;
                     }
-                    
+
                     private String getFatherSchoolLevel(ScholarshipTypologyReport report) {
-                        return report.getFatherSchoolLevel() != null ? 
-                                report.getFatherSchoolLevel().getLocalizedName() : null;
+                        return report.getFatherSchoolLevel() != null ? report.getFatherSchoolLevel().getLocalizedName() : null;
                     }
-                    
+
                     private String getFatherProfessionType(ScholarshipTypologyReport report) {
-                        return report.getFatherProfessionType() != null ? 
-                                report.getFatherProfessionType().getLocalizedName() : null;
+                        return report.getFatherProfessionType() != null ? report.getFatherProfessionType()
+                                .getLocalizedName() : null;
                     }
-                    
+
                     private String getFatherProfessionalCondition(ScholarshipTypologyReport report) {
-                        return report.getFatherProfessionalCondition() != null ? 
-                                report.getFatherProfessionalCondition().getLocalizedName() : null;
+                        return report.getFatherProfessionalCondition() != null ? report.getFatherProfessionalCondition()
+                                .getLocalizedName() : null;
                     }
-                    
+
                     private String getHouseholdSalarySpan(ScholarshipTypologyReport report) {
-                        return report.getHouseholdSalarySpan() != null ? 
-                                report.getHouseholdSalarySpan().getLocalizedName() : null;
+                        return report.getHouseholdSalarySpan() != null ? report.getHouseholdSalarySpan()
+                                .getLocalizedName() : null;
                     }
 
                     private void addData(final String key, final Object value) {
                         addCell(bundle("label." + key), value == null ? "" : value);
-                    }
-
-                    private void addData(final String key, final Boolean value) {
-                        addCell(bundle("label." + key), value == null ? "" : booleanString(value));
-                    }
-
-                    private void addData(final String key, boolean value) {
-                        addCell(bundle("label." + key), booleanString(value));
                     }
 
                     private String booleanString(final boolean value) {
@@ -340,13 +289,13 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
         try {
 
             final SpreadsheetBuilderForXLSX builder = new SpreadsheetBuilderForXLSX();
-            builder.addSheet(ULisboaReportsUtil.bundle("label.reports.scholarshipTypology.scholarshipTypology"), 
+            builder.addSheet(ULisboaReportsUtil.bundle("label.reports.scholarshipTypology.scholarshipTypology"),
                     new SheetData<String>(Collections.singleton(error)) {
-                @Override
-                protected void makeLine(final String item) {
-                    addCell(ULisboaReportsUtil.bundle("label.unexpected.error.occured"), item);
-                }
-            });
+                        @Override
+                        protected void makeLine(final String item) {
+                            addCell(ULisboaReportsUtil.bundle("label.unexpected.error.occured"), item);
+                        }
+                    });
 
             final ByteArrayOutputStream result = new ByteArrayOutputStream();
             builder.build(result);
@@ -373,16 +322,6 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
 
     private String jspPage(final String page) {
         return JSP_PATH + "/" + page;
-    }
-
-    //Report specific. Cannot be at service level (depends on instance logic to calculate final grade)
-    private boolean gradeWasImproved(final EnrolmentEvaluation improvement) {
-        final EnrolmentEvaluation previousEvaluation = improvement.getEnrolment().getEvaluationsSet().stream()
-                .filter(ev -> ev.getEvaluationSeason() != improvement.getEvaluationSeason() && ev.isFinal() && ev.isApproved()
-                        && !ev.getEvaluationSeason().isImprovement())
-                .sorted(new EvaluationComparator().reversed()).findFirst().orElse(null);
-
-        return previousEvaluation != null && improvement.getGrade().compareTo(previousEvaluation.getGrade()) > 0;
     }
 
 }
