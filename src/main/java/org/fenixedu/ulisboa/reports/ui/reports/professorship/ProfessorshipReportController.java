@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.fenixedu.academic.domain.EnrolmentEvaluation;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.spring.portal.SpringFunctionality;
 import org.fenixedu.commons.spreadsheet.SheetData;
@@ -24,7 +23,6 @@ import org.fenixedu.ulisboa.reports.services.report.professorship.ProfessorshipR
 import org.fenixedu.ulisboa.reports.ui.FenixeduULisboaReportsBaseController;
 import org.fenixedu.ulisboa.reports.ui.FenixeduULisboaReportsController;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
-import org.fenixedu.ulisboa.specifications.domain.evaluation.EvaluationComparator;
 import org.fenixedu.ulisboa.specifications.domain.file.ULisboaSpecificationsTemporaryFile;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
@@ -41,12 +39,12 @@ import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
-@SpringFunctionality(app = FenixeduULisboaReportsController.class, title = "label.title.reports.professorship", accessGroup = "logged")
+@SpringFunctionality(app = FenixeduULisboaReportsController.class, title = "label.title.reports.professorship",
+        accessGroup = "logged")
 @RequestMapping(ProfessorshipReportController.CONTROLLER_URL)
 public class ProfessorshipReportController extends FenixeduULisboaReportsBaseController {
 
-    public static final String CONTROLLER_URL =
-            "/fenixedu-ulisboa-reports/reports/professorship/professorshipreport";
+    public static final String CONTROLLER_URL = "/fenixedu-ulisboa-reports/reports/professorship/professorshipreport";
 
     private static final String JSP_PATH = CONTROLLER_URL.substring(1);
 
@@ -124,8 +122,7 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
 
     @RequestMapping(value = "/exportreport", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public @ResponseBody ResponseEntity<String> exportReport(
-            @RequestParam(value = "bean", required = false) final ProfessorshipReportParametersBean bean,
-            final Model model) {
+            @RequestParam(value = "bean", required = false) final ProfessorshipReportParametersBean bean, final Model model) {
 
         final String reportId = getReportId("exportReport");
         new Thread(() -> processReport(this::exportToXLS, bean, reportId)).start();
@@ -141,9 +138,8 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
         try {
             content = reportProcessor.apply(bean);
         } catch (Throwable e) {
-            content = createXLSWithError(
-                    e instanceof ULisboaReportsDomainException ? ((ULisboaReportsDomainException) e)
-                            .getLocalizedMessage() : ExceptionUtils.getFullStackTrace(e));
+            content = createXLSWithError(e instanceof ULisboaReportsDomainException ? ((ULisboaReportsDomainException) e)
+                    .getLocalizedMessage() : ExceptionUtils.getFullStackTrace(e));
         }
 
         ULisboaSpecificationsTemporaryFile.create(reportId, content, Authenticate.getUser());
@@ -205,21 +201,9 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
                         addData("ProfessorshipReport.allocationPercentage", report.getAllocationPercentage());
                         addData("ProfessorshipReport.workload", report.getTeacherHours());
                     }
-                    
+
                     private void addData(final String key, final Object value) {
                         addCell(bundle("label." + key), value == null ? "" : value);
-                    }
-
-                    private void addData(final String key, final Boolean value) {
-                        addCell(bundle("label." + key), value == null ? "" : booleanString(value));
-                    }
-
-                    private void addData(final String key, boolean value) {
-                        addCell(bundle("label." + key), booleanString(value));
-                    }
-
-                    private String booleanString(final boolean value) {
-                        return value ? bundle("label.yes") : bundle("label.no");
                     }
 
                 });
@@ -239,13 +223,13 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
         try {
 
             final SpreadsheetBuilderForXLSX builder = new SpreadsheetBuilderForXLSX();
-            builder.addSheet(ULisboaReportsUtil.bundle("label.reports.professorship.professorship"), 
+            builder.addSheet(ULisboaReportsUtil.bundle("label.reports.professorship.professorship"),
                     new SheetData<String>(Collections.singleton(error)) {
-                @Override
-                protected void makeLine(final String item) {
-                    addCell(ULisboaReportsUtil.bundle("label.unexpected.error.occured"), item);
-                }
-            });
+                        @Override
+                        protected void makeLine(final String item) {
+                            addCell(ULisboaReportsUtil.bundle("label.unexpected.error.occured"), item);
+                        }
+                    });
 
             final ByteArrayOutputStream result = new ByteArrayOutputStream();
             builder.build(result);
@@ -262,8 +246,7 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
 
     @RequestMapping(value = _POSTBACK_URI, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public @ResponseBody ResponseEntity<String> postback(
-            @RequestParam(value = "bean", required = false) final ProfessorshipReportParametersBean bean,
-            final Model model) {
+            @RequestParam(value = "bean", required = false) final ProfessorshipReportParametersBean bean, final Model model) {
 
         bean.updateData();
 
@@ -272,16 +255,6 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
 
     private String jspPage(final String page) {
         return JSP_PATH + "/" + page;
-    }
-
-    //Report specific. Cannot be at service level (depends on instance logic to calculate final grade)
-    private boolean gradeWasImproved(final EnrolmentEvaluation improvement) {
-        final EnrolmentEvaluation previousEvaluation = improvement.getEnrolment().getEvaluationsSet().stream()
-                .filter(ev -> ev.getEvaluationSeason() != improvement.getEvaluationSeason() && ev.isFinal() && ev.isApproved()
-                        && !ev.getEvaluationSeason().isImprovement())
-                .sorted(new EvaluationComparator().reversed()).findFirst().orElse(null);
-
-        return previousEvaluation != null && improvement.getGrade().compareTo(previousEvaluation.getGrade()) > 0;
     }
 
 }
