@@ -33,6 +33,9 @@ public class ScholarshipTypologyReportService {
     }
 
     private Collection<ScholarshipTypologyReport> process(final ExecutionYear executionYear) {
+        if (executionYear == null) {
+            return Sets.newHashSet();
+        }
 
         final Predicate<ScholarshipTypologyReport> filterPredicate = filterPredicate();
 

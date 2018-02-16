@@ -39,8 +39,8 @@ import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
-@SpringFunctionality(app = FenixeduULisboaReportsController.class, title = "label.title.reports.professorship",
-        accessGroup = "logged")
+@SpringFunctionality(app = FenixeduULisboaReportsController.class,
+        title = "label.org.fenixedu.ulisboa.reports.title.professorship", accessGroup = "logged")
 @RequestMapping(ProfessorshipReportController.CONTROLLER_URL)
 public class ProfessorshipReportController extends FenixeduULisboaReportsBaseController {
 
@@ -79,8 +79,7 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
     }
 
     static private String getReportId(final String exportName) {
-        return normalizeName(bundle("label.event.reports.professorship." + exportName), "_") + "_UUID_"
-                + UUID.randomUUID().toString();
+        return normalizeName(bundle("professorship.event." + exportName), "_") + "_UUID_" + UUID.randomUUID().toString();
     }
 
     static private String getFilename(final String reportId) {
@@ -137,7 +136,7 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
         byte[] content = null;
         try {
             content = reportProcessor.apply(bean);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             content = createXLSWithError(e instanceof ULisboaReportsDomainException ? ((ULisboaReportsDomainException) e)
                     .getLocalizedMessage() : ExceptionUtils.getFullStackTrace(e));
         }
@@ -175,43 +174,41 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
         final Collection<ProfessorshipReport> toExport = generateReport(bean);
 
         final SpreadsheetBuilderForXLSX builder = new SpreadsheetBuilderForXLSX();
-        builder.addSheet(ULisboaReportsUtil.bundle("label.reports.professorship.professorship"),
-                new SheetData<ProfessorshipReport>(toExport) {
+        builder.addSheet(ULisboaReportsUtil.bundle("professorship.professorship"), new SheetData<ProfessorshipReport>(toExport) {
 
-                    @Override
-                    protected void makeLine(final ProfessorshipReport report) {
-                        addPrimaryData(report);
-                        addProfessorshipData(bean, report);
-                    }
+            @Override
+            protected void makeLine(final ProfessorshipReport report) {
+                addPrimaryData(report);
+                addProfessorshipData(bean, report);
+            }
 
-                    private void addPrimaryData(final ProfessorshipReport report) {
-                        addData("ProfessorshipReport.teacher", report.getTeacherName());
-                        addData("ProfessorshipReport.teacherUsername", report.getTeacherUsername());
-                        addData("ProfessorshipReport.executionYear", report.getExecutionYearName());
-                        addData("ProfessorshipReport.executionSemester", report.getExecutionSemesterName());
-                    }
+            private void addPrimaryData(final ProfessorshipReport report) {
+                addData("ProfessorshipReport.teacher", report.getTeacherName());
+                addData("ProfessorshipReport.teacherUsername", report.getTeacherUsername());
+                addData("ProfessorshipReport.executionYear", report.getExecutionYearName());
+                addData("ProfessorshipReport.executionSemester", report.getExecutionSemesterName());
+            }
 
-                    private void addProfessorshipData(final ProfessorshipReportParametersBean bean,
-                            final ProfessorshipReport report) {
-                        addData("ProfessorshipReport.executionCourse", report.getExecutionCourseName());
-                        addData("ProfessorshipReport.classes", report.getClassesName());
-                        addData("ProfessorshipReport.shift", report.getShiftName());
-                        addData("ProfessorshipReport.shiftType", report.getShiftTypeName());
-                        addData("ProfessorshipReport.totalHours", report.getTotalHours());
-                        addData("ProfessorshipReport.allocationPercentage", report.getAllocationPercentage());
-                        addData("ProfessorshipReport.workload", report.getTeacherHours());
-                    }
+            private void addProfessorshipData(final ProfessorshipReportParametersBean bean, final ProfessorshipReport report) {
+                addData("ProfessorshipReport.executionCourse", report.getExecutionCourseName());
+                addData("ProfessorshipReport.classes", report.getClassesName());
+                addData("ProfessorshipReport.shift", report.getShiftName());
+                addData("ProfessorshipReport.shiftType", report.getShiftTypeName());
+                addData("ProfessorshipReport.totalHours", report.getTotalHours());
+                addData("ProfessorshipReport.allocationPercentage", report.getAllocationPercentage());
+                addData("ProfessorshipReport.workload", report.getTeacherHours());
+            }
 
-                    private void addData(final String key, final Object value) {
-                        addCell(bundle("label." + key), value == null ? "" : value);
-                    }
+            private void addData(final String key, final Object value) {
+                addCell(bundle(key), value == null ? "" : value);
+            }
 
-                });
+        });
 
         final ByteArrayOutputStream result = new ByteArrayOutputStream();
         try {
             builder.build(result);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -223,11 +220,11 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
         try {
 
             final SpreadsheetBuilderForXLSX builder = new SpreadsheetBuilderForXLSX();
-            builder.addSheet(ULisboaReportsUtil.bundle("label.reports.professorship.professorship"),
+            builder.addSheet(ULisboaReportsUtil.bundle("professorship.professorship"),
                     new SheetData<String>(Collections.singleton(error)) {
                         @Override
                         protected void makeLine(final String item) {
-                            addCell(ULisboaReportsUtil.bundle("label.unexpected.error.occured"), item);
+                            addCell(ULisboaReportsUtil.bundle("unexpected.error.occured"), item);
                         }
                     });
 
@@ -236,7 +233,7 @@ public class ProfessorshipReportController extends FenixeduULisboaReportsBaseCon
 
             return result.toByteArray();
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@SpringFunctionality(app = FenixeduULisboaReportsController.class, title = "label.title.FenixeduULisboaReports.example", accessGroup = "logged")
+@SpringFunctionality(app = FenixeduULisboaReportsController.class,
+        title = "label.org.fenixedu.ulisboa.reports.title.FenixeduULisboaReports.example", accessGroup = "logged")
 @RequestMapping(FenixeduULisboaReportsExampleController.CONTROLLER_URL)
 public class FenixeduULisboaReportsExampleController extends FenixeduULisboaReportsBaseController {
 

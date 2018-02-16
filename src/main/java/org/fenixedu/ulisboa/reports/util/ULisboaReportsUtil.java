@@ -33,6 +33,8 @@ public class ULisboaReportsUtil {
 
     public static final String BUNDLE = FenixeduULisboaReportsSpringConfiguration.BUNDLE.replace('/', '.');
 
+    public static final String PREFIX = "label.org.fenixedu.ulisboa.reports.";
+
     // @formatter: off
     /**********
      * BUNDLE *
@@ -40,11 +42,11 @@ public class ULisboaReportsUtil {
     // @formatter: on
 
     public static String bundle(final String key, final String... args) {
-        return BundleUtil.getString(ULisboaReportsUtil.BUNDLE, key, args);
+        return BundleUtil.getString(ULisboaReportsUtil.BUNDLE, PREFIX + key, args);
     }
 
     public static LocalizedString bundleI18N(final String key, final String... args) {
-        return BundleUtil.getLocalizedString(ULisboaReportsUtil.BUNDLE, key, args);
+        return BundleUtil.getLocalizedString(ULisboaReportsUtil.BUNDLE, PREFIX + key, args);
     }
 
 }

@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.ShiftProfessorship;
 
+import com.google.common.collect.Sets;
+
 public class ProfessorshipReportService {
 
     private ExecutionYear executionYear;
@@ -24,6 +26,10 @@ public class ProfessorshipReportService {
     }
 
     private Set<ShiftProfessorship> buildSearchUniverse() {
+        if (executionYear == null) {
+            return Sets.newHashSet();
+        }
+
         return executionYear.getExecutionPeriodsSet().stream()
 
                 .flatMap(ep -> ep.getAssociatedExecutionCoursesSet().stream())

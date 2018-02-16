@@ -15,7 +15,7 @@
 <div class="page-header">
 	<h1>
 		<spring:message
-			code="label.reports.scholarshipTypology.scholarshipTypologyReport" />
+			code="label.org.fenixedu.ulisboa.reports.scholarshipTypology.scholarshipTypologyReport" />
 		<small></small>
 	</h1>
 </div>
@@ -90,10 +90,10 @@
 			function($scope,$timeout,$http) {
 				
 				$scope.booleanvalues = [ {
-					name : '<spring:message code="label.no"/>',
+					name : '<spring:message code="label.org.fenixedu.ulisboa.reports.no"/>',
 					value : false
 				}, {
-					name : '<spring:message code="label.yes"/>',
+					name : '<spring:message code="label.org.fenixedu.ulisboa.reports.yes"/>',
 					value : true
 				} ];
 
@@ -141,7 +141,7 @@
 							
 						},
 						error : function(jqXHR, textStatus, errorThrown) {
-							alert('<spring:message code="label.unexpected.error.occured" />');
+							alert('<spring:message code="label.org.fenixedu.ulisboa.reports.unexpected.error.occured" />');
 						},
 					});
 				}
@@ -165,7 +165,7 @@
 							}
 						},
 						error : function(jqXHR, textStatus, errorThrown) {
-									alert('<spring:message code="label.unexpected.error.occured" />');
+									alert('<spring:message code="label.org.fenixedu.ulisboa.reports.unexpected.error.occured" />');
 									$scope.hideProgressDialog();
 								},
 						});
@@ -202,7 +202,7 @@
 
 			<div class="form-group row">
 				<div class="col-sm-2 control-label">
-					<spring:message code="label.ScholarshipTypologyReportParametersBean.executionYear" />
+					<spring:message code="label.org.fenixedu.ulisboa.reports.ScholarshipTypologyReportParametersBean.executionYear" />
 				</div>
 				<div class="col-sm-6">
 					<select id="executionYearSelect" name="executionYear"
@@ -216,11 +216,11 @@
 
 		<div class="panel-footer">
 			<button type="button" class="btn btn-primary" ng-click="search()">
-				<spring:message code="label.event.reports.scholarshipTypology.search" />
+				<spring:message code="label.org.fenixedu.ulisboa.reports.scholarshipTypology.event.search" />
 			</button>
             <button type="button" class="btn btn-primary"
                 ng-click="exportReport()">
-                <spring:message code="label.event.reports.scholarshipTypology.export" />
+                <spring:message code="label.org.fenixedu.ulisboa.reports.scholarshipTypology.event.export" />
             </button>
 		</div>
 	</div>
@@ -233,20 +233,20 @@
 					<div class="modal-header">
 						<h4 class="modal-title">
 							<spring:message
-								code="label.event.reports.scholarshipTypology.exportResult" />
+								code="label.org.fenixedu.ulisboa.reports.scholarshipTypology.event.exportResult" />
 						</h4>
 					</div>
 					<div class="modal-body">
 						<p>
 							<spring:message
-								code="label.event.reports.scholarshipTypology.exportResult.in.progress" />
+								code="label.org.fenixedu.ulisboa.reports.scholarshipTypology.event.exportResult.in.progress" />
 							<span class="glyphicon glyphicon-refresh spinning"></span>
 						</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default"
 							ng-click="hideProgressDialog()">
-							<spring:message code="label.cancel" />
+							<spring:message code="label.org.fenixedu.ulisboa.reports.cancel" />
 						</button>
 					</div>
 				</form>
@@ -265,7 +265,7 @@
 
 		<p>
 			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">&nbsp;</span>
-			<spring:message code="label.limitexceeded.use.export"
+			<spring:message code="label.org.fenixedu.ulisboa.reports.limitexceeded.use.export"
 				arguments="500;${fn:length(results)}" argumentSeparator=";"
 				htmlEscape="false" />
 		</p>
@@ -277,12 +277,12 @@
 <table id="resultsTable" class="table table-bordered table-hover">
 	<thead>
 		<tr>
-			<th><spring:message code="label.RegistrationHistoryReport.executionYear" /></th>
-			<th><spring:message code="label.Student.number" /></th>
-			<th><spring:message code="label.Person.name" /></th>
-			<th><spring:message code="label.Degree.code" /></th>
-			<th><spring:message code="label.ScholarshipTypologyReport.grantOwnerType" /></th>
-			<th><spring:message code="label.ScholarshipTypologyReport.grantOwnerProvider" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ScholarshipTypologyReport.executionYear" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ScholarshipTypologyReport.studentNumber" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ScholarshipTypologyReport.personName" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ScholarshipTypologyReport.degreeMinistryCode" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ScholarshipTypologyReport.grantOwnerType" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ScholarshipTypologyReport.grantOwnerProvider" /></th>
 			<th> </th>
 	</tr>
 	</thead>
@@ -296,7 +296,7 @@
 					<td><c:out value="${result.registration.degree.code}"></c:out></td>
 					<td>
 						<c:if test="${not empty result.grantOwnerType}">
-							<spring:message code="label.GrantOwnerType.${result.grantOwnerType}" />
+							<spring:message code="label.org.fenixedu.ulisboa.reports.GrantOwnerType.${result.grantOwnerType}" />
 						</c:if>
 					</td>
 					<td>
@@ -306,7 +306,7 @@
 					</td>
 					<td>
 						<a  class="btn btn-default btn-xs" href="${fr:checksumLink(pageContext.request,'/academicAdministration/student.do?method=visualizeRegistration&registrationID='.concat(result.registration.externalId))}">
-							<spring:message code='label.view'/>
+							<spring:message code='label.org.fenixedu.ulisboa.reports.view'/>
 						</a>
 					</td>
 				</tr>
@@ -319,6 +319,3 @@
 			false /*show tools*/, true /*paging*/,
 			"${pageContext.request.contextPath}", "${datatablesI18NUrl}");
 </script>
-
-
-

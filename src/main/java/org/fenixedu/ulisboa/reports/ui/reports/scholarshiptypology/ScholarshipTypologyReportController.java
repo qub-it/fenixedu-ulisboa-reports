@@ -39,8 +39,8 @@ import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
-@SpringFunctionality(app = FenixeduULisboaReportsController.class, title = "label.title.reports.scholarshipTypology",
-        accessGroup = "logged")
+@SpringFunctionality(app = FenixeduULisboaReportsController.class,
+        title = "label.org.fenixedu.ulisboa.reports.title.scholarshipTypology", accessGroup = "logged")
 @RequestMapping(ScholarshipTypologyReportController.CONTROLLER_URL)
 public class ScholarshipTypologyReportController extends FenixeduULisboaReportsBaseController {
 
@@ -79,8 +79,7 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
     }
 
     static private String getReportId(final String exportName) {
-        return normalizeName(bundle("label.event.reports.scholarshipTypology." + exportName), "_") + "_UUID_"
-                + UUID.randomUUID().toString();
+        return normalizeName(bundle("scholarshipTypology.event." + exportName), "_") + "_UUID_" + UUID.randomUUID().toString();
     }
 
     static private String getFilename(final String reportId) {
@@ -138,7 +137,7 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
         byte[] content = null;
         try {
             content = reportProcessor.apply(bean);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             content = createXLSWithError(e instanceof ULisboaReportsDomainException ? ((ULisboaReportsDomainException) e)
                     .getLocalizedMessage() : ExceptionUtils.getFullStackTrace(e));
         }
@@ -176,7 +175,7 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
         final Collection<ScholarshipTypologyReport> toExport = generateReport(bean);
 
         final SpreadsheetBuilderForXLSX builder = new SpreadsheetBuilderForXLSX();
-        builder.addSheet(ULisboaReportsUtil.bundle("label.reports.scholarshipTypology.scholarshipTypology"),
+        builder.addSheet(ULisboaReportsUtil.bundle("scholarshipTypology.scholarshipTypology"),
                 new SheetData<ScholarshipTypologyReport>(toExport) {
 
                     @Override
@@ -187,9 +186,9 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
 
                     private void addPrimaryData(final ScholarshipTypologyReport report) {
                         addData("ScholarshipTypologyReport.executionYear", report.getExecutionYear().getQualifiedName());
-                        addData("Student.number", report.getStudentNumber());
-                        addData("Person.name", report.getPersonName());
-                        addData("Degree.ministryCode", report.getDegreeCode());
+                        addData("ScholarshipTypologyReport.studentNumber", report.getStudentNumber());
+                        addData("ScholarshipTypologyReport.personName", report.getPersonName());
+                        addData("ScholarshipTypologyReport.degreeMinistryCode", report.getDegreeCode());
                     }
 
                     private void addComplementarPersonalData(final ScholarshipTypologyReportParametersBean bean,
@@ -223,7 +222,7 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
 
                     private String getGrantOwnerType(ScholarshipTypologyReport report) {
                         return report.getGrantOwnerType() != null ? ULisboaReportsUtil
-                                .bundle("label.GrantOwnerType." + report.getGrantOwnerType()) : null;
+                                .bundle("GrantOwnerType." + report.getGrantOwnerType()) : null;
                     }
 
                     private String getGrantOwnerProvider(ScholarshipTypologyReport report) {
@@ -265,11 +264,11 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
                     }
 
                     private void addData(final String key, final Object value) {
-                        addCell(bundle("label." + key), value == null ? "" : value);
+                        addCell(bundle(key), value == null ? "" : value);
                     }
 
                     private String booleanString(final boolean value) {
-                        return value ? bundle("label.yes") : bundle("label.no");
+                        return value ? bundle("yes") : bundle("no");
                     }
 
                 });
@@ -277,7 +276,7 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
         final ByteArrayOutputStream result = new ByteArrayOutputStream();
         try {
             builder.build(result);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -289,11 +288,11 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
         try {
 
             final SpreadsheetBuilderForXLSX builder = new SpreadsheetBuilderForXLSX();
-            builder.addSheet(ULisboaReportsUtil.bundle("label.reports.scholarshipTypology.scholarshipTypology"),
+            builder.addSheet(ULisboaReportsUtil.bundle("scholarshipTypology.scholarshipTypology"),
                     new SheetData<String>(Collections.singleton(error)) {
                         @Override
                         protected void makeLine(final String item) {
-                            addCell(ULisboaReportsUtil.bundle("label.unexpected.error.occured"), item);
+                            addCell(ULisboaReportsUtil.bundle("unexpected.error.occured"), item);
                         }
                     });
 
@@ -302,7 +301,7 @@ public class ScholarshipTypologyReportController extends FenixeduULisboaReportsB
 
             return result.toByteArray();
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }

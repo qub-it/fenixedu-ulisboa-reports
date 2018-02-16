@@ -15,7 +15,7 @@
 <div class="page-header">
 	<h1>
 		<spring:message
-			code="label.reports.professorship.professorshipReport" />
+			code="label.org.fenixedu.ulisboa.reports.professorship.professorshipReport" />
 		<small></small>
 	</h1>
 </div>
@@ -90,10 +90,10 @@
 			function($scope,$timeout,$http) {
 				
 				$scope.booleanvalues = [ {
-					name : '<spring:message code="label.no"/>',
+					name : '<spring:message code="label.org.fenixedu.ulisboa.reports.no"/>',
 					value : false
 				}, {
-					name : '<spring:message code="label.yes"/>',
+					name : '<spring:message code="label.org.fenixedu.ulisboa.reports.yes"/>',
 					value : true
 				} ];
 
@@ -141,7 +141,7 @@
 							
 						},
 						error : function(jqXHR, textStatus, errorThrown) {
-							alert('<spring:message code="label.unexpected.error.occured" />');
+							alert('<spring:message code="label.org.fenixedu.ulisboa.reports.unexpected.error.occured" />');
 						},
 					});
 				}
@@ -165,7 +165,7 @@
 							}
 						},
 						error : function(jqXHR, textStatus, errorThrown) {
-									alert('<spring:message code="label.unexpected.error.occured" />');
+									alert('<spring:message code="label.org.fenixedu.ulisboa.reports.unexpected.error.occured" />');
 									$scope.hideProgressDialog();
 								},
 						});
@@ -202,7 +202,7 @@
 
 			<div class="form-group row">
 				<div class="col-sm-2 control-label">
-					<spring:message code="label.ProfessorshipReportParametersBean.executionYear" />
+					<spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReportParametersBean.executionYear" />
 				</div>
 				<div class="col-sm-6">
 					<select id="executionYearSelect" name="executionYear"
@@ -216,11 +216,11 @@
 
 		<div class="panel-footer">
 			<button type="button" class="btn btn-primary" ng-click="search()">
-				<spring:message code="label.event.reports.professorship.search" />
+				<spring:message code="label.org.fenixedu.ulisboa.reports.professorship.event.search" />
 			</button>
             <button type="button" class="btn btn-primary"
                 ng-click="exportReport()">
-                <spring:message code="label.event.reports.professorship.export" />
+                <spring:message code="label.org.fenixedu.ulisboa.reports.professorship.event.export" />
             </button>
 		</div>
 	</div>
@@ -233,20 +233,20 @@
 					<div class="modal-header">
 						<h4 class="modal-title">
 							<spring:message
-								code="label.event.reports.professorship.exportResult" />
+								code="label.org.fenixedu.ulisboa.reports.professorship.event.exportResult" />
 						</h4>
 					</div>
 					<div class="modal-body">
 						<p>
 							<spring:message
-								code="label.event.reports.professorship.exportResult.in.progress" />
+								code="label.org.fenixedu.ulisboa.reports.professorship.event.exportResult.in.progress" />
 							<span class="glyphicon glyphicon-refresh spinning"></span>
 						</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default"
 							ng-click="hideProgressDialog()">
-							<spring:message code="label.cancel" />
+							<spring:message code="label.org.fenixedu.ulisboa.reports.cancel" />
 						</button>
 					</div>
 				</form>
@@ -265,7 +265,7 @@
 
 		<p>
 			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">&nbsp;</span>
-			<spring:message code="label.limitexceeded.use.export"
+			<spring:message code="label.org.fenixedu.ulisboa.reports.limitexceeded.use.export"
 				arguments="500;${fn:length(results)}" argumentSeparator=";"
 				htmlEscape="false" />
 		</p>
@@ -277,17 +277,17 @@
 <table id="resultsTable" class="table table-bordered table-hover">
 	<thead>
 		<tr>
-			<th><spring:message code="label.ProfessorshipReport.teacher" /></th>
-			<th><spring:message code="label.ProfessorshipReport.teacherUsername" /></th>
-			<th><spring:message code="label.ProfessorshipReport.executionYear" /></th>
-			<th><spring:message code="label.ProfessorshipReport.executionSemester" /></th>
-			<th><spring:message code="label.ProfessorshipReport.executionCourse" /></th>
-			<!--<th><spring:message code="label.ProfessorshipReport.classes" /></th>-->
-			<th><spring:message code="label.ProfessorshipReport.shift" /></th>
-			<th><spring:message code="label.ProfessorshipReport.shiftType" /></th>
-			<th><spring:message code="label.ProfessorshipReport.totalHours" /></th>
-			<th><spring:message code="label.ProfessorshipReport.allocationPercentage" /></th>
-			<th><spring:message code="label.ProfessorshipReport.workload" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.teacher" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.teacherUsername" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.executionYear" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.executionSemester" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.executionCourse" /></th>
+			<!--<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.classes" /></th>-->
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.shift" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.shiftType" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.totalHours" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.allocationPercentage" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.workload" /></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -359,6 +359,3 @@
 			false /*show tools*/, true /*paging*/,
 			"${pageContext.request.contextPath}", "${datatablesI18NUrl}");
 </script>
-
-
-
