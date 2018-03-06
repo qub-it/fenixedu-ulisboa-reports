@@ -1,6 +1,7 @@
 package org.fenixedu.ulisboa.reports.services.report.scholarshiptypology;
 
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.SortedSet;
 
 import org.fenixedu.academic.domain.Degree;
@@ -25,9 +26,9 @@ import com.google.common.collect.Sets;
 
 public class ScholarshipTypologyReport implements Comparable<ScholarshipTypologyReport> {
 
-    private ExecutionYear executionYear;
+    private final ExecutionYear executionYear;
 
-    private Registration registration;
+    private final Registration registration;
 
     public ScholarshipTypologyReport(final Registration registration, final ExecutionYear executionYear) {
         this.executionYear = executionYear;
@@ -74,12 +75,12 @@ public class ScholarshipTypologyReport implements Comparable<ScholarshipTypology
         final Registration registration = getRegistration();
         return registration == null ? null : registration.getPerson();
     }
-    
+
     public PersonalIngressionData getPersonalIngressionData() {
         final Student student = getStudent();
         return student == null ? null : student.getPersonalIngressionDataByExecutionYear(executionYear);
     }
-    
+
     private PersonUlisboaSpecifications getPersonUlisboaSpecifications() {
         final Person person = getPerson();
         return person == null ? null : person.getPersonUlisboaSpecifications();
@@ -160,65 +161,66 @@ public class ScholarshipTypologyReport implements Comparable<ScholarshipTypology
         return result.toString().endsWith("|") ? result.delete(result.length() - 1, result.length()).toString() : result
                 .toString();
     }
-    
+
     public ProfessionalSituationConditionType getFatherProfessionalCondition() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getFatherProfessionalCondition();
     }
-    
+
     public ProfessionType getFatherProfessionType() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getFatherProfessionType();
     }
-    
+
     public SchoolLevelType getFatherSchoolLevel() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getFatherSchoolLevel();
     }
-    
+
     public Unit getGrantOwnerProvider() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getGrantOwnerProvider();
     }
-    
+
     public GrantOwnerType getGrantOwnerType() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getGrantOwnerType();
     }
-    
+
     public SalarySpan getHouseholdSalarySpan() {
-        final PersonUlisboaSpecifications personUlisboaSpecifications = getPersonUlisboaSpecifications();
-        return personUlisboaSpecifications == null ? null : personUlisboaSpecifications.getHouseholdSalarySpan();
+        return Optional.ofNullable(getPersonUlisboaSpecifications())
+                .map(p -> p.getPersonUlisboaSpecificationsByExcutionYear(this.executionYear)).map(p -> p.getHouseholdSalarySpan())
+                .orElse(null);
     }
-    
+
     public ProfessionalSituationConditionType getMotherProfessionalCondition() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getMotherProfessionalCondition();
     }
-    
+
     public ProfessionType getMotherProfessionType() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getMotherProfessionType();
     }
-    
+
     public SchoolLevelType getMotherSchoolLevel() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getMotherSchoolLevel();
     }
-    
+
     public ProfessionalSituationConditionType getProfessionalCondition() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getProfessionalCondition();
     }
-    
+
     public ProfessionType getProfessionalType() {
         final PersonalIngressionData personalIngressionData = getPersonalIngressionData();
         return personalIngressionData == null ? null : personalIngressionData.getProfessionType();
     }
-    
-    public ProfessionTimeType getProfessionTimeType() {
-        final PersonUlisboaSpecifications personUlisboaSpecifications = getPersonUlisboaSpecifications();
-        return personUlisboaSpecifications == null ? null : personUlisboaSpecifications.getProfessionTimeType();
-    }
 
+    public ProfessionTimeType getProfessionTimeType() {
+        return Optional.ofNullable(getPersonUlisboaSpecifications())
+                .map(p -> p.getPersonUlisboaSpecificationsByExcutionYear(this.executionYear)).map(p -> p.getProfessionTimeType())
+                .orElse(null);
+    }
 }
