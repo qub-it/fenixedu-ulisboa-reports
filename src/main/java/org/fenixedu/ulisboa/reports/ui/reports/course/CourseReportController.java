@@ -19,7 +19,6 @@ import org.fenixedu.commons.spreadsheet.SheetData;
 import org.fenixedu.commons.spreadsheet.SpreadsheetBuilderForXLSX;
 import org.fenixedu.ulisboa.reports.domain.exceptions.ULisboaReportsDomainException;
 import org.fenixedu.ulisboa.reports.dto.report.course.CourseReportParametersBean;
-import org.fenixedu.ulisboa.reports.dto.report.professorship.ProfessorshipReportParametersBean;
 import org.fenixedu.ulisboa.reports.services.report.course.CompetenceCourseReport;
 import org.fenixedu.ulisboa.reports.services.report.course.CompetenceCourseReportService;
 import org.fenixedu.ulisboa.reports.services.report.course.CompetenceCourseService;
@@ -240,7 +239,7 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
 
     @RequestMapping(value = _POSTBACK_URI, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public @ResponseBody ResponseEntity<String> postback(
-            @RequestParam(value = "bean", required = false) final ProfessorshipReportParametersBean bean, final Model model) {
+            @RequestParam(value = "bean", required = false) final CourseReportParametersBean bean, final Model model) {
 
         bean.updateData();
 
