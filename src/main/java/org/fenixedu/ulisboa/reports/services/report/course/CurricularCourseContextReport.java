@@ -7,14 +7,12 @@ import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.degreeStructure.Context;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
 
-public class CurricularCourseContextReport
-        implements Comparable<CurricularCourseContextReport> {
+public class CurricularCourseContextReport implements Comparable<CurricularCourseContextReport> {
 
     private final CurricularCourse curricularCourse;
     private final Context context;
 
-    public CurricularCourseContextReport(CurricularCourse curricularCourse,
-            Context context) {
+    public CurricularCourseContextReport(CurricularCourse curricularCourse, Context context) {
         this.curricularCourse = curricularCourse;
         this.context = context;
     }
@@ -25,23 +23,19 @@ public class CurricularCourseContextReport
         final Collator instance = Collator.getInstance();
         instance.setStrength(Collator.NO_DECOMPOSITION);
 
-        final Comparator<CurricularCourseContextReport> byCourseName = (x,
-                y) -> instance.compare(x.getCompetenceCourseName(),
-                        y.getCompetenceCourseName());
-        final Comparator<CurricularCourseContextReport> byCode = (x,
-                y) -> instance.compare(x.getCompetenceCourseCode(),
-                        y.getCompetenceCourseCode());
-        final Comparator<CurricularCourseContextReport> byDegreeName = (x,
-                y) -> instance.compare(x.getDegreeName(), y.getDegreeName());
-        final Comparator<CurricularCourseContextReport> byDegreeCode = (x,
-                y) -> instance.compare(x.getDegreeCode(), y.getDegreeCode());
-        final Comparator<CurricularCourseContextReport> byGroupName = (x,
-                y) -> instance.compare(x.getContextGroupName(),
-                        y.getContextGroupName());
+        final Comparator<CurricularCourseContextReport> byCourseName =
+                (x, y) -> instance.compare(x.getCompetenceCourseName(), y.getCompetenceCourseName());
+        final Comparator<CurricularCourseContextReport> byCode =
+                (x, y) -> instance.compare(x.getCompetenceCourseCode(), y.getCompetenceCourseCode());
+        final Comparator<CurricularCourseContextReport> byDegreeName =
+                (x, y) -> instance.compare(x.getDegreeName(), y.getDegreeName());
+        final Comparator<CurricularCourseContextReport> byDegreeCode =
+                (x, y) -> instance.compare(x.getDegreeCode(), y.getDegreeCode());
+        final Comparator<CurricularCourseContextReport> byGroupName =
+                (x, y) -> instance.compare(x.getContextGroupName(), y.getContextGroupName());
 
-        return byCourseName.thenComparing(byCode).thenComparing(byDegreeName)
-                .thenComparing(byDegreeCode).thenComparing(byGroupName)
-                .compare(this, o);
+        return byCourseName.thenComparing(byCode).thenComparing(byDegreeName).thenComparing(byDegreeCode)
+                .thenComparing(byGroupName).compare(this, o);
     }
 
     public String getCompetenceCourseCode() {
@@ -60,21 +54,26 @@ public class CurricularCourseContextReport
         return curricularCourse.getDegree().getFilteredName();
     }
 
-    public String getDegreeCurricularPlanName() {
-        return context.getParentCourseGroup().getParentDegreeCurricularPlan()
-                .getName();
-    }
-
     public String getContextGroupName() {
         return context.getParentCourseGroup().getOneFullName();
     }
 
+    public String getDegreeType() {
+        return curricularCourse.getDegreeType().getName().getContent();
+    }
+
+    public String getOfficialDegreeCode() {
+        return curricularCourse.getDegree().getMinistryCode();
+    }
+
+    public String getDegreeCurricularPlanName() {
+        return context.getParentCourseGroup().getParentDegreeCurricularPlan().getName();
+    }
+
     public String getTypology() {
-        return isOptional()
-                ? ULisboaReportsUtil.bundle(
-                        "curricularCourseContextReport.typology.optional")
-                : ULisboaReportsUtil.bundle(
-                        "curricularCourseContextReport.typology.mandatory");
+        return context.getParentCourseGroup().isOptionalCourseGroup() ? ULisboaReportsUtil
+                .bundle("curricularCourseContextReport.typology.optional") : ULisboaReportsUtil
+                        .bundle("curricularCourseContextReport.typology.mandatory");
     }
 
     public int getCurricularYear() {
@@ -90,14 +89,7 @@ public class CurricularCourseContextReport
     }
 
     public String getContextEndDate() {
-        return context.getEndExecutionPeriod() == null
-                ? ULisboaReportsUtil
-                        .bundle("curricularCourseContextReport.context.open")
-                : context.getEndExecutionPeriod().getQualifiedName();
-    }
-
-    private boolean isOptional() {
-        return curricularCourse.getParentCourseGroups().stream()
-                .anyMatch(group -> group.isOptionalCourseGroup());
+        return context.getEndExecutionPeriod() == null ? ULisboaReportsUtil
+                .bundle("curricularCourseContextReport.context.open") : context.getEndExecutionPeriod().getQualifiedName();
     }
 }

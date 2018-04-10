@@ -16,6 +16,12 @@ public class CourseReportParametersBean implements IBean {
         updateData();
     }
 
+    public void updateData() {
+        this.executionYearsDataSource =
+                ExecutionYear.readNotClosedExecutionYears().stream().sorted(ExecutionYear.COMPARATOR_BY_BEGIN_DATE.reversed())
+                        .map(x -> new TupleDataSourceBean(x.getExternalId(), x.getQualifiedName())).collect(Collectors.toList());
+    }
+
     public ExecutionYear getExecutionYear() {
         return executionYear;
     }
@@ -26,12 +32,6 @@ public class CourseReportParametersBean implements IBean {
 
     public List<TupleDataSourceBean> getExecutionYearsDataSource() {
         return executionYearsDataSource;
-    }
-
-    public void updateData() {
-        this.executionYearsDataSource =
-                ExecutionYear.readNotClosedExecutionYears().stream().sorted(ExecutionYear.COMPARATOR_BY_BEGIN_DATE.reversed())
-                        .map(x -> new TupleDataSourceBean(x.getExternalId(), x.getQualifiedName())).collect(Collectors.toList());
     }
 
 }

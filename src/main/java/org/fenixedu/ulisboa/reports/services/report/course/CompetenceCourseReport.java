@@ -4,8 +4,11 @@ import java.text.Collator;
 import java.util.Comparator;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
+import org.fenixedu.academic.util.Bundle;
+import org.fenixedu.bennu.core.i18n.BundleUtil;
 
-public class CompetenceCourseReport implements Comparable<CompetenceCourseReport> {
+public class CompetenceCourseReport
+        implements Comparable<CompetenceCourseReport> {
 
     private final CompetenceCourse competenceCourse;
 
@@ -19,8 +22,10 @@ public class CompetenceCourseReport implements Comparable<CompetenceCourseReport
         final Collator instance = Collator.getInstance();
         instance.setStrength(Collator.NO_DECOMPOSITION);
 
-        final Comparator<CompetenceCourseReport> byCourseName = (x, y) -> instance.compare(x.getName(), y.getName());
-        final Comparator<CompetenceCourseReport> byCode = (x, y) -> instance.compare(x.getCode(), y.getCode());
+        final Comparator<CompetenceCourseReport> byCourseName = (x,
+                y) -> instance.compare(x.getName(), y.getName());
+        final Comparator<CompetenceCourseReport> byCode = (x, y) -> instance
+                .compare(x.getCode(), y.getCode());
 
         return byCourseName.thenComparing(byCode).compare(this, o);
     }
@@ -46,15 +51,28 @@ public class CompetenceCourseReport implements Comparable<CompetenceCourseReport
     }
 
     public String getScientificArea() {
-        return competenceCourse.getScientificAreaUnit().getNameI18n().getContent();
+        return competenceCourse.getScientificAreaUnit().getNameI18n()
+                .getContent();
     }
 
     public String getAcronym() {
         return competenceCourse.getAcronym();
     }
 
+    public String getType() {
+        return BundleUtil.getLocalizedString(Bundle.ENUMERATION,
+                competenceCourse.getType().name()).getContent();
+    }
+
     public String getRegime() {
         return competenceCourse.getRegime().getLocalizedName();
+    }
+
+    public Double getTotalHours() {
+        return 14 * (getTheoreticalHours() + getProblemsHours()
+                + getFieldWorkHours() + getLaboratorialHours() + getOtherHours()
+                + getSeminaryHours() + getTrainingPeriodHours()
+                + getTutorialOrientationHours()) + getAutonomousWorkHours();
     }
 
     public Double getTheoreticalHours() {
@@ -91,12 +109,6 @@ public class CompetenceCourseReport implements Comparable<CompetenceCourseReport
 
     public Double getAutonomousWorkHours() {
         return competenceCourse.getAutonomousWorkHours();
-    }
-
-    public Double getTotalHours() {
-        return getTheoreticalHours() + getProblemsHours() + getAutonomousWorkHours() + getFieldWorkHours()
-                + getLaboratorialHours() + getOtherHours() + getSeminaryHours() + getTrainingPeriodHours()
-                + getTutorialOrientationHours();
     }
 
     public Double getECTS() {

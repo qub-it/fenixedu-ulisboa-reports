@@ -50,11 +50,8 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
 
     public static final String CONTROLLER_URL = "/fenixedu-ulisboa-reports/reports/course/coursereport";
     private static final String JSP_PATH = CONTROLLER_URL.substring(1);
-
-    private void setParametersBean(CourseReportParametersBean bean, Model model) {
-        model.addAttribute("beanJson", getBeanJson(bean));
-        model.addAttribute("bean", bean);
-    }
+    private static final String _POSTBACK_URI = "/postback";
+    public static final String POSTBACK_URL = CONTROLLER_URL + _POSTBACK_URI;
 
     @RequestMapping
     public String home(Model model, RedirectAttributes redirectAttributes) {
@@ -67,6 +64,15 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
         return jspPage("coursereport");
     }
 
+    private void setParametersBean(CourseReportParametersBean bean, Model model) {
+        model.addAttribute("beanJson", getBeanJson(bean));
+        model.addAttribute("bean", bean);
+    }
+
+    private String jspPage(final String page) {
+        return JSP_PATH + "/" + page;
+    }
+
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String search(@RequestParam("bean") CourseReportParametersBean bean, Model model,
             RedirectAttributes redirectAttributes) {
@@ -74,12 +80,18 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
         return jspPage("coursereport");
     }
 
-    static private String getReportId(final String exportName) {
-        return normalizeName(bundle("course.event." + exportName), "_") + "_UUID_" + UUID.randomUUID().toString();
+    @RequestMapping(value = "/exportreport", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    public @ResponseBody ResponseEntity<String> exportReport(
+            @RequestParam(value = "bean", required = false) final CourseReportParametersBean bean, final Model model) {
+
+        final String reportId = getReportId("exportReport");
+        new Thread(() -> processReport(this::exportToXLS, bean, reportId)).start();
+
+        return new ResponseEntity<String>(reportId, HttpStatus.OK);
     }
 
-    static private String getFilename(final String reportId) {
-        return reportId.substring(0, reportId.indexOf("_UUID_"));
+    static private String getReportId(final String exportName) {
+        return normalizeName(bundle("course.event." + exportName), "_") + "_UUID_" + UUID.randomUUID().toString();
     }
 
     static public String normalizeName(final String input, final String replacement) {
@@ -101,16 +113,6 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
         return ULisboaReportsUtil.bundle(key);
     }
 
-    @RequestMapping(value = "/exportreport", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public @ResponseBody ResponseEntity<String> exportReport(
-            @RequestParam(value = "bean", required = false) final CourseReportParametersBean bean, final Model model) {
-
-        final String reportId = getReportId("exportReport");
-        new Thread(() -> processReport(this::exportToXLS, bean, reportId)).start();
-
-        return new ResponseEntity<String>(reportId, HttpStatus.OK);
-    }
-
     @Atomic(mode = TxMode.READ)
     protected void processReport(final Function<CourseReportParametersBean, byte[]> reportProcessor,
             final CourseReportParametersBean bean, final String reportId) {
@@ -124,6 +126,28 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
         }
 
         ULisboaSpecificationsTemporaryFile.create(reportId, content, Authenticate.getUser());
+    }
+
+    private byte[] createXLSWithError(String error) {
+
+        try {
+            final SpreadsheetBuilderForXLSX builder = new SpreadsheetBuilderForXLSX();
+            builder.addSheet(ULisboaReportsUtil.bundle("competenceCourse.competenceCourse"),
+                    new SheetData<String>(Collections.singleton(error)) {
+                        @Override
+                        protected void makeLine(final String item) {
+                            addCell(ULisboaReportsUtil.bundle("unexpected.error.occured"), item);
+                        }
+                    });
+
+            final ByteArrayOutputStream result = new ByteArrayOutputStream();
+            builder.build(result);
+
+            return result.toByteArray();
+
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @RequestMapping(value = "/exportstatus/{reportId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
@@ -142,6 +166,10 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
                 ULisboaSpecificationsTemporaryFile.findByUserAndFilename(Authenticate.getUser(), reportId);
         writeFile(response, getFilename(reportId) + "_" + new DateTime().toString("yyyy-MM-dd_HH-mm-ss") + ".xlsx",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", temporaryFile.get().getContent());
+    }
+
+    static private String getFilename(final String reportId) {
+        return reportId.substring(0, reportId.indexOf("_UUID_"));
     }
 
     private byte[] exportToXLS(final CourseReportParametersBean bean) {
@@ -172,16 +200,19 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
                         addData("CompetenceCourseReport.department", report.getDepartment());
                         addData("CompetenceCourseReport.area", report.getScientificArea());
                         addData("CompetenceCourseReport.acronym", report.getAcronym());
+                        addData("CompetenceCourseReport.type", report.getType());
                         addData("CompetenceCourseReport.regime", report.getRegime());
                         addData("CompetenceCourseReport.load.theoretical", report.getTheoreticalHours());
                         addData("CompetenceCourseReport.load.problems", report.getProblemsHours());
                         addData("CompetenceCourseReport.load.laboratorial", report.getLaboratorialHours());
                         addData("CompetenceCourseReport.load.seminary", report.getSeminaryHours());
+                        addData("CompetenceCourseReport.load.fieldWork", report.getFieldWorkHours());
+                        addData("CompetenceCourseReport.load.training", report.getTrainingPeriodHours());
                         addData("CompetenceCourseReport.load.tutorialOrientation", report.getTutorialOrientationHours());
-                        addData("competenceCourseReport.load.other", report.getOtherHours());
-                        addData("competenceCourseReport.load.autonomous", report.getAutonomousWorkHours());
-                        addData("competenceCourseReport.load.total", report.getTotalHours());
-                        addData("competenceCourseReport.ects", report.getECTS());
+                        addData("CompetenceCourseReport.load.other", report.getOtherHours());
+                        addData("CompetenceCourseReport.load.autonomous", report.getAutonomousWorkHours());
+                        addData("CompetenceCourseReport.load.total", report.getTotalHours());
+                        addData("CompetenceCourseReport.ects", report.getECTS());
                     }
 
                     private void addData(final String key, final Object value) {
@@ -207,7 +238,9 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
                         addData("curricularCourseContextReport.courseCode", report.getCompetenceCourseCode());
                         addData("curricularCourseContextReport.courseName", report.getCompetenceCourseName());
                         addData("curricularCourseContextReport.degreeCode", report.getDegreeCode());
+                        addData("curricularCourseContextReport.officialDegreeCode", report.getOfficialDegreeCode());
                         addData("curricularCourseContextReport.degreeName", report.getDegreeName());
+                        addData("curricularCourseContextReport.degreeType", report.getDegreeType());
                         addData("curricularCourseContextReport.curricularPlan", report.getDegreeCurricularPlanName());
                         addData("curricularCourseContextReport.group", report.getContextGroupName());
                         addData("curricularCourseContextReport.typology", report.getTypology());
@@ -234,9 +267,6 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
 
     }
 
-    private static final String _POSTBACK_URI = "/postback";
-    public static final String POSTBACK_URL = CONTROLLER_URL + _POSTBACK_URI;
-
     @RequestMapping(value = _POSTBACK_URI, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public @ResponseBody ResponseEntity<String> postback(
             @RequestParam(value = "bean", required = false) final CourseReportParametersBean bean, final Model model) {
@@ -244,32 +274,6 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
         bean.updateData();
 
         return new ResponseEntity<String>(getBeanJson(bean), HttpStatus.OK);
-    }
-
-    private byte[] createXLSWithError(String error) {
-
-        try {
-            final SpreadsheetBuilderForXLSX builder = new SpreadsheetBuilderForXLSX();
-            builder.addSheet(ULisboaReportsUtil.bundle("competenceCourse.competenceCourse"),
-                    new SheetData<String>(Collections.singleton(error)) {
-                        @Override
-                        protected void makeLine(final String item) {
-                            addCell(ULisboaReportsUtil.bundle("unexpected.error.occured"), item);
-                        }
-                    });
-
-            final ByteArrayOutputStream result = new ByteArrayOutputStream();
-            builder.build(result);
-
-            return result.toByteArray();
-
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String jspPage(final String page) {
-        return JSP_PATH + "/" + page;
     }
 
 }
