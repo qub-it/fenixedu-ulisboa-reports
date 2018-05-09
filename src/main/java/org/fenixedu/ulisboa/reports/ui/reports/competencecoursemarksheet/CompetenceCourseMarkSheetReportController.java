@@ -190,7 +190,7 @@ public class CompetenceCourseMarkSheetReportController extends FenixeduULisboaRe
             }
 
             private void addCompetenceCourseMarkSheetData(final CompetenceCourseMarkSheetReport report) {
-                addData("CompetenceCourseMarkSheetReport.courseName", report.getComptenceCourseName());
+                addData("CompetenceCourseMarkSheetReport.courseName", report.getCompetenceCourseName());
                 addData("CompetenceCourseMarkSheetReport.courseCode", report.getCompetenceCourseCode());
                 addData("CompetenceCourseMarkSheetReport.executionPresentation", report.getExecutionPresentation());
                 addData("CompetenceCourseMarkSheetReport.evaluationSeason", report.getEvaluationSeason());

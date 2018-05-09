@@ -25,8 +25,8 @@ public class CompetenceCourseMarkSheetReport
         instance.setStrength(Collator.NO_DECOMPOSITION);
 
         final Comparator<CompetenceCourseMarkSheetReport> byCourseName = (x,
-                y) -> instance.compare(x.getComptenceCourseName(),
-                        y.getComptenceCourseName());
+                y) -> instance.compare(x.getCompetenceCourseName(),
+                        y.getCompetenceCourseName());
         final Comparator<CompetenceCourseMarkSheetReport> byCode = (x,
                 y) -> instance.compare(x.getCompetenceCourseCode(),
                         y.getCompetenceCourseCode());
@@ -44,7 +44,7 @@ public class CompetenceCourseMarkSheetReport
         return competenceCourseMarkSheet.getCompetenceCourse().getCode();
     }
 
-    public String getComptenceCourseName() {
+    public String getCompetenceCourseName() {
         return getCompetenceCourseMarkSheet().getCompetenceCourse()
                 .getNameI18N().getContent();
     }
