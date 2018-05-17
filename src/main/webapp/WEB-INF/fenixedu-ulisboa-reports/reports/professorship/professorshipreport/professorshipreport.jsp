@@ -29,7 +29,7 @@
 		<c:forEach items="${infoMessages}" var="message">
 			<p>
 				<span class="glyphicon glyphicon glyphicon-ok-sign"
-					aria-hidden="true">&nbsp;</span> ${message}
+					  aria-hidden="true">&nbsp;</span> ${message}
 			</p>
 		</c:forEach>
 
@@ -41,7 +41,7 @@
 		<c:forEach items="${warningMessages}" var="message">
 			<p>
 				<span class="glyphicon glyphicon-exclamation-sign"
-					aria-hidden="true">&nbsp;</span> ${message}
+					  aria-hidden="true">&nbsp;</span> ${message}
 			</p>
 		</c:forEach>
 
@@ -53,14 +53,12 @@
 		<c:forEach items="${errorMessages}" var="message">
 			<p>
 				<span class="glyphicon glyphicon-exclamation-sign"
-					aria-hidden="true">&nbsp;</span> ${message}
+					  aria-hidden="true">&nbsp;</span> ${message}
 			</p>
 		</c:forEach>
 
 	</div>
 </c:if>
-
-
 
 
 <style>
@@ -93,9 +91,9 @@
 					name : '<spring:message code="label.org.fenixedu.ulisboa.reports.no"/>',
 					value : false
 				}, {
-					name : '<spring:message code="label.org.fenixedu.ulisboa.reports.yes"/>',
-					value : true
-				} ];
+					name: '<spring:message code="label.org.fenixedu.ulisboa.reports.yes"/>',
+					value: true
+				}];
 
 				$scope.object = ${beanJson};
 				$scope.form = {};
@@ -188,8 +186,6 @@
 </script>
 
 
-
-
 <form method="post" class="form-horizontal" id="searchParamsForm"
 	name="form" ng-app="professorshipReportApp"
 	ng-controller="ProfessorshipReportController" novalidate>
@@ -277,11 +273,11 @@
 <table id="resultsTable" class="table table-bordered table-hover">
 	<thead>
 		<tr>
-			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.teacher" /></th>
-			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.teacherUsername" /></th>
-			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.executionYear" /></th>
-			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.executionSemester" /></th>
-			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.executionCourse" /></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.teacher"/></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.executionYear"/></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.executionSemester"/></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.executionCourse"/></th>
+			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.courseCode"/></th>
 			<!--<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.classes" /></th>-->
 			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.shift" /></th>
 			<th><spring:message code="label.org.fenixedu.ulisboa.reports.ProfessorshipReport.shiftType" /></th>
@@ -300,11 +296,6 @@
 						</c:if>
 					</td>
 					<td>
-						<c:if test="${not empty result.teacherUsername}">
-							<c:out value="${result.teacherUsername}"></c:out>
-						</c:if>
-					</td>
-					<td>
 						<c:if test="${not empty result.executionYearName}">
 							<c:out value="${result.executionYearName}"></c:out>
 						</c:if>
@@ -317,6 +308,11 @@
 					<td>
 						<c:if test="${not empty result.executionCourseName}">
 							<c:out value="${result.executionCourseName}"></c:out>
+						</c:if>
+					</td>
+					<td>
+						<c:if test="${not empty result.competenceCourseCode}">
+							<c:out value="${result.competenceCourseCode}"></c:out>
 						</c:if>
 					</td>
 					<!--<td>
