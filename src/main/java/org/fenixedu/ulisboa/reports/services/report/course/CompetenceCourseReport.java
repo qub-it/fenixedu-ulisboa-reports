@@ -69,10 +69,10 @@ public class CompetenceCourseReport
     }
 
     public Double getTotalHours() {
-        return 14 * (getTheoreticalHours() + getProblemsHours()
+        return getTheoreticalHours() + getProblemsHours()
                 + getFieldWorkHours() + getLaboratorialHours() + getOtherHours()
                 + getSeminaryHours() + getTrainingPeriodHours()
-                + getTutorialOrientationHours()) + getAutonomousWorkHours();
+                + getTutorialOrientationHours() + getAutonomousWorkHours();
     }
 
     public Double getTheoreticalHours() {
