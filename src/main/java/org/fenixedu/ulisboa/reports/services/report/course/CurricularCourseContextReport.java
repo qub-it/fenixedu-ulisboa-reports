@@ -51,7 +51,7 @@ public class CurricularCourseContextReport implements Comparable<CurricularCours
     }
 
     public String getDegreeName() {
-        return curricularCourse.getDegree().getFilteredName();
+        return curricularCourse.getDegree().getName();
     }
 
     public String getContextGroupName() {
