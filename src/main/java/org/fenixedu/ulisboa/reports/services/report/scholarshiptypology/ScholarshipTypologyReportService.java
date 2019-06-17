@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.student.Registration;
-import org.fenixedu.ulisboa.specifications.domain.services.student.RegistrationDataServices;
+import org.fenixedu.academic.domain.student.RegistrationDataServices;
 
 import com.google.common.collect.Sets;
 

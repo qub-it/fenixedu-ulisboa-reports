@@ -15,12 +15,12 @@ import org.fenixedu.academic.domain.StudentCurricularPlan;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.PersonalIngressionData;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.student.RegistrationServices;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.ulisboa.reports.domain.exceptions.ULisboaReportsDomainException;
 import org.fenixedu.ulisboa.specifications.domain.PersonUlisboaSpecifications;
 import org.fenixedu.ulisboa.specifications.domain.ProfessionTimeType;
 import org.fenixedu.ulisboa.specifications.domain.SalarySpan;
-import org.fenixedu.ulisboa.specifications.domain.services.RegistrationServices;
 
 import com.google.common.collect.Sets;
 
