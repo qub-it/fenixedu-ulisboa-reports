@@ -92,7 +92,7 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
 
     public ExecutionSemester getExecutionPeriod() {
         final ExecutionCourse executionCourse = getExecutionCourse();
-        return executionCourse == null ? null : executionCourse.getExecutionPeriod();
+        return executionCourse == null ? null : executionCourse.getExecutionPeriod().convert(ExecutionSemester.class);
     }
 
     public String getIsResponsible() {
