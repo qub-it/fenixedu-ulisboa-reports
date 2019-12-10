@@ -1,3 +1,5 @@
+- Fix: compare by checkSum no longer returns null + updated pom
+
 2.2.2 (26-09-2019)
 - Refactor: update dependencies
 
