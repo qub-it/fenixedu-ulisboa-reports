@@ -18,7 +18,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.EvaluationSeason;
 import org.fenixedu.academic.domain.ExecutionCourse;
-import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.Shift;
 import org.fenixedu.academic.domain.evaluation.markSheet.CompetenceCourseMarkSheet;
 import org.fenixedu.academic.domain.evaluation.markSheet.CompetenceCourseMarkSheetChangeRequestStateEnum;
@@ -73,10 +73,10 @@ public class CompetenceCourseMarkSheetStateChangeReportController extends Fenixe
     }
 
     @RequestMapping(value = "/search")
-    public String search(@RequestParam(value = "executionsemester", required = false) ExecutionSemester executionSemester,
+    public String search(@RequestParam(value = "executionsemester", required = false) ExecutionInterval executionInterval,
             @RequestParam(value = "competencecourse", required = false) CompetenceCourse competenceCourse, Model model,
             RedirectAttributes redirectAttributes) {
-        final List<CompetenceCourseMarkSheet> searchResultsDataSet = filterSearch(executionSemester, competenceCourse);
+        final List<CompetenceCourseMarkSheet> searchResultsDataSet = filterSearch(executionInterval, competenceCourse);
 
         setParametersBean(new CompetenceCourseMarkSheetStateChangeReportParametersBean(), model);
         model.addAttribute("searchcompetencecoursemarksheetstatechangeResultsDataSet", searchResultsDataSet);
@@ -91,16 +91,16 @@ public class CompetenceCourseMarkSheetStateChangeReportController extends Fenixe
         model.addAttribute("bean", bean);
     }
 
-    private List<CompetenceCourseMarkSheet> filterSearch(final ExecutionSemester executionSemester,
+    private List<CompetenceCourseMarkSheet> filterSearch(final ExecutionInterval executionInterval,
             final CompetenceCourse competenceCourse) {
 
-        return getSearchUniverseSearchDataSet(executionSemester, competenceCourse).collect(Collectors.toList());
+        return getSearchUniverseSearchDataSet(executionInterval, competenceCourse).collect(Collectors.toList());
     }
 
-    private Stream<CompetenceCourseMarkSheet> getSearchUniverseSearchDataSet(final ExecutionSemester semester,
+    private Stream<CompetenceCourseMarkSheet> getSearchUniverseSearchDataSet(final ExecutionInterval interval,
             final CompetenceCourse competence) {
 
-        return CompetenceCourseMarkSheet.findBy(semester, competence, (ExecutionCourse) null, (EvaluationSeason) null,
+        return CompetenceCourseMarkSheet.findBy(interval, competence, (ExecutionCourse) null, (EvaluationSeason) null,
                 (DateTime) null, (Set<Shift>) null, (CompetenceCourseMarkSheetStateEnum) null,
                 (CompetenceCourseMarkSheetChangeRequestStateEnum) null);
     }

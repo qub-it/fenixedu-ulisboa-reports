@@ -4,35 +4,30 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.evaluation.markSheet.CompetenceCourseMarkSheet;
 
 public class CompetenceCourseMarkSheetReportService {
 
-    private ExecutionSemester executionSemester;
+    private ExecutionInterval executionInterval;
 
-    public void filterEnrolmentExecutionSemester(
-            ExecutionSemester executionSemester) {
-        this.executionSemester = executionSemester;
+    public void filterEnrolmentExecutionSemester(ExecutionInterval executionInterval) {
+        this.executionInterval = executionInterval;
     }
 
     public Collection<CompetenceCourseMarkSheetReport> generateReport() {
-        return process(executionSemester);
+        return process(executionInterval);
     }
 
-    private Collection<CompetenceCourseMarkSheetReport> process(
-            final ExecutionSemester executionSemester) {
-        return buildSearchUniverse(executionSemester).stream()
-                .map(this::buildReport).collect(Collectors.toSet());
+    private Collection<CompetenceCourseMarkSheetReport> process(final ExecutionInterval executionInterval) {
+        return buildSearchUniverse(executionInterval).stream().map(this::buildReport).collect(Collectors.toSet());
     }
 
-    private Set<CompetenceCourseMarkSheet> buildSearchUniverse(
-            final ExecutionSemester executionSemester) {
-        return executionSemester.getCompetenceCourseMarkSheetSet();
+    private Set<CompetenceCourseMarkSheet> buildSearchUniverse(final ExecutionInterval executionInterval) {
+        return executionInterval.getCompetenceCourseMarkSheetSet();
     }
 
-    private CompetenceCourseMarkSheetReport buildReport(
-            final CompetenceCourseMarkSheet competenceCourseMarkSheet) {
+    private CompetenceCourseMarkSheetReport buildReport(final CompetenceCourseMarkSheet competenceCourseMarkSheet) {
         return new CompetenceCourseMarkSheetReport(competenceCourseMarkSheet);
     }
 

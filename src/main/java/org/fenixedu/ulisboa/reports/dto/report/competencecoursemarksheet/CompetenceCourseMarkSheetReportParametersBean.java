@@ -3,13 +3,13 @@ package org.fenixedu.ulisboa.reports.dto.report.competencecoursemarksheet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.bennu.IBean;
 import org.fenixedu.bennu.TupleDataSourceBean;
 
 public class CompetenceCourseMarkSheetReportParametersBean implements IBean {
 
-    private ExecutionSemester executionSemester;
+    private ExecutionInterval executionInterval;
     private List<TupleDataSourceBean> executionSemestersDataSource;
 
     public CompetenceCourseMarkSheetReportParametersBean() {
@@ -21,19 +21,16 @@ public class CompetenceCourseMarkSheetReportParametersBean implements IBean {
     }
 
     public void updateData() {
-        this.executionSemestersDataSource = ExecutionSemester
-                .readNotClosedExecutionPeriods().stream()
-                .sorted(ExecutionSemester.COMPARATOR_BY_BEGIN_DATE.reversed())
-                .map(x -> new TupleDataSourceBean(x.getExternalId(),
-                        x.getQualifiedName()))
-                .collect(Collectors.toList());
+        this.executionSemestersDataSource =
+                ExecutionInterval.findActiveChilds().stream().sorted(ExecutionInterval.COMPARATOR_BY_BEGIN_DATE.reversed())
+                        .map(x -> new TupleDataSourceBean(x.getExternalId(), x.getQualifiedName())).collect(Collectors.toList());
     }
 
-    public ExecutionSemester getExecutionSemester() {
-        return executionSemester;
+    public ExecutionInterval getExecutionSemester() {
+        return executionInterval;
     }
 
-    public void setExecutionSemester(ExecutionSemester executionSemester) {
-        this.executionSemester = executionSemester;
+    public void setExecutionSemester(ExecutionInterval executionInterval) {
+        this.executionInterval = executionInterval;
     }
 }

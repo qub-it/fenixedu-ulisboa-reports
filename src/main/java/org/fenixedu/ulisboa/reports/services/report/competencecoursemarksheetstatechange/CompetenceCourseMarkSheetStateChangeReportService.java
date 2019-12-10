@@ -5,16 +5,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
-import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.evaluation.markSheet.CompetenceCourseMarkSheet;
 
 public class CompetenceCourseMarkSheetStateChangeReportService {
 
-    private ExecutionSemester executionSemester;
+    private ExecutionInterval executionInterval;
     private CompetenceCourse competenceCourse;
 
-    public void filterEnrolmentExecutionSemester(ExecutionSemester executionSemester) {
-        this.executionSemester = executionSemester;
+    public void filterEnrolmentExecutionSemester(ExecutionInterval executionInterval) {
+        this.executionInterval = executionInterval;
     }
 
     public void filterEnrolmentCompetenceCourse(CompetenceCourse competenceCourse) {
@@ -22,19 +22,19 @@ public class CompetenceCourseMarkSheetStateChangeReportService {
     }
 
     public Collection<CompetenceCourseMarkSheetStateChangeReport> generateReport() {
-        return process(executionSemester, competenceCourse);
+        return process(executionInterval, competenceCourse);
     }
 
-    private Collection<CompetenceCourseMarkSheetStateChangeReport> process(final ExecutionSemester executionSemester,
+    private Collection<CompetenceCourseMarkSheetStateChangeReport> process(final ExecutionInterval executionInterval,
             final CompetenceCourse competenceCourse) {
-        return buildSearchUniverse(executionSemester, competenceCourse).stream().map(this::buildReport)
+        return buildSearchUniverse(executionInterval, competenceCourse).stream().map(this::buildReport)
                 .collect(Collectors.toSet());
     }
 
-    private Set<CompetenceCourseMarkSheet> buildSearchUniverse(final ExecutionSemester executionSemester,
+    private Set<CompetenceCourseMarkSheet> buildSearchUniverse(final ExecutionInterval executionInterval,
             final CompetenceCourse competenceCourse) {
         return competenceCourse.getCompetenceCourseMarkSheetSet().stream()
-                .filter(ccms -> ccms.getExecutionSemester().getOid().equals(executionSemester.getOid()) && ccms.isConfirmed())
+                .filter(ccms -> ccms.getExecutionSemester().getOid().equals(executionInterval.getOid()) && ccms.isConfirmed())
                 .filter(ccms -> ccms.getCompetenceCourse().getOid().equals(competenceCourse.getOid()))
                 .collect(Collectors.toSet());
     }

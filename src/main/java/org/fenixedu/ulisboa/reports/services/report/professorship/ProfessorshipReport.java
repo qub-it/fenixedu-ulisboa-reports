@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.ExecutionCourse;
-import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
@@ -30,8 +30,8 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
         instance.setStrength(Collator.NO_DECOMPOSITION);
 
         final Comparator<ProfessorshipReport> byTeacher = (x, y) -> instance.compare(x.getTeacherName(), y.getTeacherName());
-        final Comparator<ProfessorshipReport> bySemesterAndYear = (x, y) -> ExecutionSemester.COMPARATOR_BY_SEMESTER_AND_YEAR
-                .compare(x.getExecutionPeriod(), y.getExecutionPeriod());
+        final Comparator<ProfessorshipReport> bySemesterAndYear =
+                (x, y) -> ExecutionInterval.COMPARATOR_BY_BEGIN_DATE.compare(x.getExecutionPeriod(), y.getExecutionPeriod());
         final Comparator<ProfessorshipReport> byCourseName =
                 (x, y) -> instance.compare(x.getExecutionCourseName(), y.getExecutionCourseName());
 
@@ -90,9 +90,9 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
                 .map(o -> o.getNameI18n().getContent()).orElse("");
     }
 
-    public ExecutionSemester getExecutionPeriod() {
+    public ExecutionInterval getExecutionPeriod() {
         final ExecutionCourse executionCourse = getExecutionCourse();
-        return executionCourse == null ? null : executionCourse.getExecutionPeriod().convert(ExecutionSemester.class);
+        return executionCourse == null ? null : executionCourse.getExecutionPeriod();
     }
 
     public String getIsResponsible() {
@@ -110,8 +110,8 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
     }
 
     public String getExecutionSemesterName() {
-        final ExecutionSemester executionSemester = getExecutionPeriod();
-        return executionSemester == null ? null : executionSemester.getName();
+        final ExecutionInterval executionInterval = getExecutionPeriod();
+        return executionInterval == null ? null : executionInterval.getName();
     }
 
     public String getExecutionCourseName() {

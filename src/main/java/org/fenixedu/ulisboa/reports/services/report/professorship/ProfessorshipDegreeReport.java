@@ -4,7 +4,7 @@ import java.text.Collator;
 import java.util.Comparator;
 
 import org.fenixedu.academic.domain.Degree;
-import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ShiftProfessorship;
 
 public class ProfessorshipDegreeReport extends ProfessorshipReport {
@@ -28,8 +28,8 @@ public class ProfessorshipDegreeReport extends ProfessorshipReport {
 
         final Comparator<ProfessorshipDegreeReport> byTeacher =
                 (x, y) -> instance.compare(x.getTeacherName(), y.getTeacherName());
-        final Comparator<ProfessorshipDegreeReport> bySemesterAndYear = (x,
-                y) -> ExecutionSemester.COMPARATOR_BY_SEMESTER_AND_YEAR.compare(x.getExecutionPeriod(), y.getExecutionPeriod());
+        final Comparator<ProfessorshipDegreeReport> bySemesterAndYear =
+                (x, y) -> ExecutionInterval.COMPARATOR_BY_BEGIN_DATE.compare(x.getExecutionPeriod(), y.getExecutionPeriod());
         final Comparator<ProfessorshipDegreeReport> byDegreeName =
                 (x, y) -> instance.compare(x.getDegreeName(), y.getDegreeName());
         final Comparator<ProfessorshipDegreeReport> byCourseName =

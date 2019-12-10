@@ -1,12 +1,13 @@
 package org.fenixedu.ulisboa.reports.dto.report.competencecoursemarksheetstatechange;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.ExecutionCourse;
-import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.bennu.IBean;
 import org.fenixedu.bennu.TupleDataSourceBean;
 
@@ -14,7 +15,7 @@ import com.google.common.collect.Sets;
 
 public class CompetenceCourseMarkSheetStateChangeReportParametersBean implements IBean {
 
-    private ExecutionSemester executionSemester;
+    private ExecutionInterval executionInterval;
     private List<TupleDataSourceBean> executionSemesterDataSource;
 
     private CompetenceCourse competenceCourse;
@@ -32,13 +33,13 @@ public class CompetenceCourseMarkSheetStateChangeReportParametersBean implements
     }
 
     public void updateData() {
-        this.executionSemesterDataSource = ExecutionSemester.readNotClosedExecutionPeriods().stream()
-                .sorted(ExecutionSemester.COMPARATOR_BY_BEGIN_DATE.reversed())
-                .map(x -> new TupleDataSourceBean(x.getExternalId(), x.getQualifiedName())).collect(Collectors.toList());
+        this.executionSemesterDataSource =
+                ExecutionInterval.findActiveChilds().stream().sorted(ExecutionInterval.COMPARATOR_BY_BEGIN_DATE.reversed())
+                        .map(x -> new TupleDataSourceBean(x.getExternalId(), x.getQualifiedName())).collect(Collectors.toList());
     }
 
     public void update() {
-        setExecutionSemesterDataSource(ExecutionSemester.readNotClosedExecutionPeriods().stream().collect(Collectors.toSet()));
+        setExecutionSemesterDataSource(ExecutionInterval.findActiveChilds());
 
         updateCompetenceCourseDataSource();
 
@@ -46,8 +47,8 @@ public class CompetenceCourseMarkSheetStateChangeReportParametersBean implements
 
     }
 
-    public void setExecutionSemesterDataSource(final Set<ExecutionSemester> value) {
-        this.executionSemesterDataSource = value.stream().sorted(ExecutionSemester.COMPARATOR_BY_BEGIN_DATE.reversed()).map(x -> {
+    public void setExecutionSemesterDataSource(final Collection<ExecutionInterval> value) {
+        this.executionSemesterDataSource = value.stream().sorted(ExecutionInterval.COMPARATOR_BY_BEGIN_DATE.reversed()).map(x -> {
             TupleDataSourceBean tuple = new TupleDataSourceBean();
             tuple.setId(x.getExternalId());
             tuple.setText(x.getQualifiedName());
@@ -87,8 +88,8 @@ public class CompetenceCourseMarkSheetStateChangeReportParametersBean implements
         return competenceCourse;
     }
 
-    public ExecutionSemester getExecutionSemester() {
-        return executionSemester;
+    public ExecutionInterval getExecutionSemester() {
+        return executionInterval;
     }
 
     public List<TupleDataSourceBean> getExecutionSemesterDataSource() {
@@ -99,8 +100,8 @@ public class CompetenceCourseMarkSheetStateChangeReportParametersBean implements
         return competenceCourseDataSource;
     }
 
-    public void setExecutionSemester(ExecutionSemester executionSemester) {
-        this.executionSemester = executionSemester;
+    public void setExecutionSemester(ExecutionInterval executionInterval) {
+        this.executionInterval = executionInterval;
     }
 
     public void setCompetenceCourse(CompetenceCourse competenceCourse) {
