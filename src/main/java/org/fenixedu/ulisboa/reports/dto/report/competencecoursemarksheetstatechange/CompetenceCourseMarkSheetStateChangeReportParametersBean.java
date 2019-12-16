@@ -15,7 +15,7 @@ import com.google.common.collect.Sets;
 
 public class CompetenceCourseMarkSheetStateChangeReportParametersBean implements IBean {
 
-    private ExecutionInterval executionInterval;
+    private ExecutionInterval executionSemester;
     private List<TupleDataSourceBean> executionSemesterDataSource;
 
     private CompetenceCourse competenceCourse;
@@ -89,7 +89,7 @@ public class CompetenceCourseMarkSheetStateChangeReportParametersBean implements
     }
 
     public ExecutionInterval getExecutionSemester() {
-        return executionInterval;
+        return executionSemester;
     }
 
     public List<TupleDataSourceBean> getExecutionSemesterDataSource() {
@@ -101,7 +101,7 @@ public class CompetenceCourseMarkSheetStateChangeReportParametersBean implements
     }
 
     public void setExecutionSemester(ExecutionInterval executionInterval) {
-        this.executionInterval = executionInterval;
+        this.executionSemester = executionInterval;
     }
 
     public void setCompetenceCourse(CompetenceCourse competenceCourse) {

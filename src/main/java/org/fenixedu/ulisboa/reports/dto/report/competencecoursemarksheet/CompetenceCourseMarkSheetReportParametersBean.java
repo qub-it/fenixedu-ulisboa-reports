@@ -9,7 +9,7 @@ import org.fenixedu.bennu.TupleDataSourceBean;
 
 public class CompetenceCourseMarkSheetReportParametersBean implements IBean {
 
-    private ExecutionInterval executionInterval;
+    private ExecutionInterval executionSemester;
     private List<TupleDataSourceBean> executionSemestersDataSource;
 
     public CompetenceCourseMarkSheetReportParametersBean() {
@@ -27,10 +27,10 @@ public class CompetenceCourseMarkSheetReportParametersBean implements IBean {
     }
 
     public ExecutionInterval getExecutionSemester() {
-        return executionInterval;
+        return executionSemester;
     }
 
     public void setExecutionSemester(ExecutionInterval executionInterval) {
-        this.executionInterval = executionInterval;
+        this.executionSemester = executionInterval;
     }
 }
