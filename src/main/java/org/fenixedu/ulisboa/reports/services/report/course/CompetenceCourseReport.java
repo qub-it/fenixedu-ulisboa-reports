@@ -2,6 +2,7 @@ package org.fenixedu.ulisboa.reports.services.report.course;
 
 import java.text.Collator;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.util.Bundle;
@@ -51,8 +52,8 @@ public class CompetenceCourseReport
     }
 
     public String getScientificArea() {
-        return competenceCourse.getScientificAreaUnit().getNameI18n()
-                .getContent();
+        return competenceCourse.getCompetenceCourseGroupUnit().getParentUnits().stream().filter(u -> u.isScientificAreaUnit())
+                .map(u -> u.getName()).collect(Collectors.joining(", "));
     }
 
     public String getAcronym() {
