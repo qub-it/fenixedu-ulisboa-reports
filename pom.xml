@@ -73,7 +73,7 @@
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>28.8.0</version>
+			<version>29.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>org.fenixedu.ulisboa</groupId>
 			<artifactId>fenixedu-ulisboa-specifications</artifactId>
-			<version>6.10.0</version>
+			<version>6.11.0</version>
 		</dependency>
 
 	</dependencies>
