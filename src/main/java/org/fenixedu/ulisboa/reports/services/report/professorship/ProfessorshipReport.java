@@ -12,7 +12,9 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Shift;
+import org.fenixedu.academic.domain.ShiftEnrolment;
 import org.fenixedu.academic.domain.ShiftProfessorship;
+import org.fenixedu.academic.domain.schedule.shiftCapacity.ShiftCapacity;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
 
 public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
@@ -134,11 +136,11 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
     }
 
     public String getShiftOccupation() {
-        return Integer.toString(getShift().getStudentsSet().size());
+        return Integer.toString(ShiftEnrolment.getTotalEnrolments(getShift()));
     }
 
     public String getShiftCapacity() {
-        return Integer.toString(getShift().getLotacao());
+        return Integer.toString(ShiftCapacity.getTotalCapacity(getShift()));
     }
 
     public String getTotalHours() {
