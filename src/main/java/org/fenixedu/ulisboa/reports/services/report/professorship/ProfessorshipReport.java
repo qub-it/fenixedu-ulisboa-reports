@@ -3,7 +3,6 @@ package org.fenixedu.ulisboa.reports.services.report.professorship;
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.ExecutionCourse;
@@ -19,7 +18,7 @@ import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
 
 public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
 
-    private ShiftProfessorship shiftProfessorship;
+    private final ShiftProfessorship shiftProfessorship;
 
     public ProfessorshipReport(final ShiftProfessorship shiftProfessorship) {
         this.shiftProfessorship = shiftProfessorship;
@@ -56,7 +55,7 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
     }
 
     protected ExecutionCourse getExecutionCourse() {
-        Shift shift = getShift();
+        final Shift shift = getShift();
         return shift == null ? null : shift.getExecutionCourse();
     }
 
@@ -78,7 +77,7 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
     }
 
     protected Person getTeacherPerson() {
-        Professorship professorship = getProfessorship();
+        final Professorship professorship = getProfessorship();
         return professorship == null ? null : professorship.getPerson();
     }
 
@@ -143,22 +142,31 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
         return Integer.toString(ShiftCapacity.getTotalCapacity(getShift()));
     }
 
-    public String getTotalHours() {
+    /* public String getTotalHours() {
         return minutesToHours(getTotalMinutes());
+    }*/
+
+    public String getTotalHours() {
+        return getShift().getCourseLoadTotalHours() == null ? null : minutesToHours(
+                getShift().getCourseLoadTotalHours().longValue() * 60);
     }
 
-    private String minutesToHours(long min) {
-        int t = (int) min;
-        int hours = t / 60;
-        int minutes = t % 60;
-        return String.format("%d:%02d", hours, minutes);
-    }
+    /*  private long getTotalMinutes() {
+    return getShift().getAssociatedLessonsSet().stream()
+            .map(l -> (l.getAllLessonDatesWithoutInstanceDates().size() + l.getLessonInstancesSet().size())
+                    * l.getTotalDuration().getStandardMinutes())
+            .collect(Collectors.summingLong(i -> i));
+    }*/
 
     private long getTotalMinutes() {
-        return getShift().getAssociatedLessonsSet().stream()
-                .map(l -> (l.getAllLessonDatesWithoutInstanceDates().size() + l.getLessonInstancesSet().size())
-                        * l.getTotalDuration().getStandardMinutes())
-                .collect(Collectors.summingLong(i -> i));
+        return getShift().getCourseLoadTotalHours() == null ? null : getShift().getCourseLoadTotalHours().longValue() * 60;
+    }
+
+    private String minutesToHours(final long min) {
+        final int t = (int) min;
+        final int hours = t / 60;
+        final int minutes = t % 60;
+        return String.format("%d:%02d", hours, minutes);
     }
 
     public String getTeacherHours() {

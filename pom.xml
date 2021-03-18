@@ -17,10 +17,6 @@
 
 	<name>FenixEdu ULisboa Reports</name>
 
-	<properties>
-		<version.org.fenixedu.bennu>6.0.8-FORK</version.org.fenixedu.bennu>
-	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -63,17 +59,17 @@
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>bennu-core</artifactId>
-			<version>${version.org.fenixedu.bennu}</version>
+			<version>6.1.6-FORK</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>bennu-spring</artifactId>
-			<version>${version.org.fenixedu.bennu}</version>
+			<version>6.1.6-FORK</version>
 		</dependency>
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>30.7.0</version>
+			<version>32.6.1</version>
 		</dependency>
 
 		<dependency>
@@ -85,7 +81,7 @@
 		<dependency>
 			<groupId>org.fenixedu.ulisboa</groupId>
 			<artifactId>fenixedu-ulisboa-specifications</artifactId>
-			<version>6.16.0</version>
+			<version>6.22.0</version>
 		</dependency>
 
 	</dependencies>
