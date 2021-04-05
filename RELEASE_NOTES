@@ -1,3 +1,4 @@
+2.5.0 (05-04-2021)
 - Refactor: changed (again) ProfessorshipReport getTotalHours calculations (value is now obtained based on the shift type)
 
 2.4.0 (18-03-2021)
