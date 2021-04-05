@@ -13,6 +13,7 @@ import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Shift;
 import org.fenixedu.academic.domain.ShiftEnrolment;
 import org.fenixedu.academic.domain.ShiftProfessorship;
+import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseLoad;
 import org.fenixedu.academic.domain.schedule.shiftCapacity.ShiftCapacity;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
 
@@ -142,27 +143,64 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
         return Integer.toString(ShiftCapacity.getTotalCapacity(getShift()));
     }
 
-    /* public String getTotalHours() {
-        return minutesToHours(getTotalMinutes());
-    }*/
-
     public String getTotalHours() {
-        return getShift().getCourseLoadTotalHours() == null ? null : minutesToHours(
-                getShift().getCourseLoadTotalHours().longValue() * 60);
+        return minutesToHours(getTotalMinutes());
     }
 
-    /*  private long getTotalMinutes() {
-    return getShift().getAssociatedLessonsSet().stream()
-            .map(l -> (l.getAllLessonDatesWithoutInstanceDates().size() + l.getLessonInstancesSet().size())
-                    * l.getTotalDuration().getStandardMinutes())
-            .collect(Collectors.summingLong(i -> i));
-    }*/
+    private double getCompetenceCourseLoadHoursByShiftType(final CompetenceCourseLoad competenceCourseLoad) {
+        switch (getShift().getShiftTypesCodePrettyPrint()) {
 
-    private long getTotalMinutes() {
-        return getShift().getCourseLoadTotalHours() == null ? null : getShift().getCourseLoadTotalHours().longValue() * 60;
+        case "T":
+
+            return competenceCourseLoad.getTheoreticalHours();
+        case "TP":
+
+            return competenceCourseLoad.getProblemsHours();
+        case "L":
+
+            return competenceCourseLoad.getLaboratorialHours();
+        case "S":
+
+            return competenceCourseLoad.getSeminaryHours();
+        case "TC":
+
+            return competenceCourseLoad.getFieldWorkHours();
+        case "E":
+
+            return competenceCourseLoad.getTrainingPeriodHours();
+        case "OT":
+
+            return competenceCourseLoad.getTutorialOrientationHours();
+        case "O":
+
+            return competenceCourseLoad.getOtherHours();
+        }
+
+        return 0;
     }
 
-    private String minutesToHours(final long min) {
+    private double getTotalMinutes() {
+
+        for (final CompetenceCourse competenceCourse : getShift().getExecutionCourse().getCompetenceCourses()) {
+
+            if (competenceCourse.getCompetenceCourseLoads().size() == 1) {
+                return getCompetenceCourseLoadHoursByShiftType(competenceCourse.getCompetenceCourseLoads().iterator().next())
+                        * 60;
+            }
+
+            for (final CompetenceCourseLoad competenceCourseLoad : competenceCourse.getCompetenceCourseLoads()) {
+
+                if (getExecutionSemesterName().contains(String.valueOf(competenceCourseLoad.getLoadOrder()))) {
+                    return getCompetenceCourseLoadHoursByShiftType(competenceCourseLoad) * 60;
+                }
+
+            }
+        }
+
+        return 0;
+    }
+
+    private String minutesToHours(final double min) {
         final int t = (int) min;
         final int hours = t / 60;
         final int minutes = t % 60;
