@@ -1,3 +1,4 @@
+2.7.0 (07-06-2021)
 - Refactor: CompetenceCourseService searchUniverse now only takes into account competence courses of a given execution year + ProfessorshipReport now only lists data based of a given execution year
 
 2.6.0 (07-06-2021)
