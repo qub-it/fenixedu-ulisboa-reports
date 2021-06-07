@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Optional;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
+import org.fenixedu.academic.domain.CourseLoad;
 import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ExecutionYear;
@@ -13,6 +14,7 @@ import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Shift;
 import org.fenixedu.academic.domain.ShiftEnrolment;
 import org.fenixedu.academic.domain.ShiftProfessorship;
+import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
 import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseLoad;
 import org.fenixedu.academic.domain.schedule.shiftCapacity.ShiftCapacity;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
@@ -181,14 +183,17 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
 
     private double getTotalMinutes() {
 
-        for (final CompetenceCourse competenceCourse : getShift().getExecutionCourse().getCompetenceCourses()) {
+        for (final CompetenceCourse competenceCourse : getExecutionCourse().getCompetenceCourses()) {
 
-            if (competenceCourse.getCompetenceCourseLoads().size() == 1) {
-                return getCompetenceCourseLoadHoursByShiftType(competenceCourse.getCompetenceCourseLoads().iterator().next())
-                        * 60;
+            final CompetenceCourseInformation competenceCourseInformation =
+                    competenceCourse.findInformationMostRecentUntil(getExecutionPeriod());
+
+            if (competenceCourseInformation.getCompetenceCourseLoadsSet().size() == 1) {
+                return getCompetenceCourseLoadHoursByShiftType(
+                        competenceCourseInformation.getCompetenceCourseLoadsSet().iterator().next()) * 60;
             }
 
-            for (final CompetenceCourseLoad competenceCourseLoad : competenceCourse.getCompetenceCourseLoads()) {
+            for (final CompetenceCourseLoad competenceCourseLoad : competenceCourseInformation.getCompetenceCourseLoadsSet()) {
 
                 if (getExecutionSemesterName().contains(String.valueOf(competenceCourseLoad.getLoadOrder()))) {
                     return getCompetenceCourseLoadHoursByShiftType(competenceCourseLoad) * 60;
@@ -197,7 +202,7 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
             }
         }
 
-        return 0;
+        return 0.0;
     }
 
     private String minutesToHours(final double min) {
