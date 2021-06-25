@@ -6,7 +6,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
+import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ExecutionYear;
+import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
 import org.fenixedu.academic.domain.degreeStructure.Context;
 
 import com.google.common.collect.Sets;
@@ -15,8 +17,14 @@ public class CompetenceCourseService {
 
     private ExecutionYear executionYear;
 
+    private Boolean isActiveCompetenceCourses;
+
     public void filterExecutionYear(final ExecutionYear executionYear) {
         this.executionYear = executionYear;
+    }
+
+    public void filterIsActiveCompetenceCourses(final Boolean isActiveCompetenceCourses) {
+        this.isActiveCompetenceCourses = isActiveCompetenceCourses;
     }
 
     public Collection<CompetenceCourse> process() {
@@ -25,11 +33,18 @@ public class CompetenceCourseService {
 
     private Set<CompetenceCourse> buildSearchUniverse() {
 
-        if (executionYear == null) {
+        if (executionYear == null || isActiveCompetenceCourses == null) {
             return Sets.newHashSet();
         }
 
+        if (isActiveCompetenceCourses) {
+            return CompetenceCourse.readApprovedBolonhaCompetenceCourses().stream()
+                    .filter(cc -> cc.getCurricularCourseContexts().stream().anyMatch(context -> context.isOpen(executionYear)))
+                    .collect(Collectors.toSet());
+        }
+
         return CompetenceCourse.readApprovedBolonhaCompetenceCourses().stream()
-                .filter(cc -> cc.getBeginExecutionInterval().getExecutionYear() == executionYear).collect(Collectors.toSet());
+                .filter(cc -> cc.findInformationMostRecentUntil(executionYear.getFirstExecutionPeriod()) != null)
+                .collect(Collectors.toSet());
     }
 }

@@ -102,10 +102,10 @@
 				$scope.onBeanChange = function(model, field) {
 					$scope.postBack(model);
 				}
-
+				
 				$scope.search = function() {
 					
-					if ($scope.object.executionYear !== null) {
+					if ($scope.object.executionYear !== null || $scope.object.isActiveCompetenceCourses !== null) {
 						$('#searchParamsForm').attr('action', '${pageContext.request.contextPath}<%=CourseReportController.CONTROLLER_URL%>/search')
 						$('#searchParamsForm').submit();
 					}
@@ -191,19 +191,35 @@
 	<div class="panel panel-primary">
 		<div class="panel-body">
 
-			<div class="form-group row">
+			<div class="form-group row">	
 				<div class="col-sm-2 control-label">
 					<spring:message code="label.org.fenixedu.ulisboa.reports.CourseReportParametersBean.executionYear" />
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-2">
 					<select id="executionYearSelect" name="executionYear"
 						class="form-control" ng-model="object.executionYear"
 						ng-options="executionYear.id as executionYear.text for executionYear in object.executionYearsDataSource">
 						<option></option>
-					</select>
-				</div>
+					</select>					
+				</div>				
 			</div>
+					
+			<div class="form-group row">	
+				<div class="col-sm-2 control-label">
+					<spring:message code="label.org.fenixedu.ulisboa.reports.CourseReportParametersBean.isActiveCompetenceCourses" />
+				</div>
+				
+				<div class="col-sm-2">
+					<select id="isActiveCompetenceCoursesSelect" name="isActiveCompetenceCourses"
+						class="form-control" ng-model="object.isActiveCompetenceCourses"
+						ng-options="bvalue.value as bvalue.name for bvalue in booleanvalues">
+						<option></option>
+					</select>
+				</div>	
+			</div>
+			
 		</div>
+	
 
 		<div class="panel-footer">			
             <button type="button" class="btn btn-primary"

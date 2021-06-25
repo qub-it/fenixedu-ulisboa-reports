@@ -54,17 +54,17 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
     public static final String POSTBACK_URL = CONTROLLER_URL + _POSTBACK_URI;
 
     @RequestMapping
-    public String home(Model model, RedirectAttributes redirectAttributes) {
+    public String home(final Model model, final RedirectAttributes redirectAttributes) {
         return redirect(CONTROLLER_URL + "/search", model, redirectAttributes);
     }
 
     @RequestMapping(value = "/search")
-    public String search(Model model, RedirectAttributes redirectAttributes) {
+    public String search(final Model model, final RedirectAttributes redirectAttributes) {
         setParametersBean(new CourseReportParametersBean(), model);
         return jspPage("coursereport");
     }
 
-    private void setParametersBean(CourseReportParametersBean bean, Model model) {
+    private void setParametersBean(final CourseReportParametersBean bean, final Model model) {
         model.addAttribute("beanJson", getBeanJson(bean));
         model.addAttribute("bean", bean);
     }
@@ -74,8 +74,8 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String search(@RequestParam("bean") CourseReportParametersBean bean, Model model,
-            RedirectAttributes redirectAttributes) {
+    public String search(@RequestParam("bean") final CourseReportParametersBean bean, final Model model,
+            final RedirectAttributes redirectAttributes) {
         setParametersBean(bean, model);
         return jspPage("coursereport");
     }
@@ -128,7 +128,7 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
         ULisboaSpecificationsTemporaryFile.create(reportId, content, Authenticate.getUser());
     }
 
-    private byte[] createXLSWithError(String error) {
+    private byte[] createXLSWithError(final String error) {
 
         try {
             final SpreadsheetBuilderForXLSX builder = new SpreadsheetBuilderForXLSX();
@@ -160,8 +160,8 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
     }
 
     @RequestMapping(value = "/downloadreport/{reportId}", method = RequestMethod.GET)
-    public void downloadReport(@PathVariable("reportId") String reportId, final Model model,
-            RedirectAttributes redirectAttributes, HttpServletResponse response) throws IOException {
+    public void downloadReport(@PathVariable("reportId") final String reportId, final Model model,
+            final RedirectAttributes redirectAttributes, final HttpServletResponse response) throws IOException {
         final Optional<ULisboaSpecificationsTemporaryFile> temporaryFile =
                 ULisboaSpecificationsTemporaryFile.findByUserAndFilename(Authenticate.getUser(), reportId);
         writeFile(response, getFilename(reportId) + "_" + new DateTime().toString("yyyy-MM-dd_HH-mm-ss") + ".xlsx",
@@ -176,9 +176,11 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
 
         final CompetenceCourseService service = new CompetenceCourseService();
         service.filterExecutionYear(bean.getExecutionYear());
+        service.filterIsActiveCompetenceCourses(bean.getIsActiveCompetenceCourses());
         final Collection<CompetenceCourse> competenceCourses = service.process();
 
-        final CompetenceCourseReportService competenceCourseReportService = new CompetenceCourseReportService(competenceCourses);
+        final CompetenceCourseReportService competenceCourseReportService =
+                new CompetenceCourseReportService(competenceCourses, bean.getExecutionYear());
         final Collection<CompetenceCourseReport> competenceCourseReports =
                 competenceCourseReportService.generateReport().stream().sorted().collect(Collectors.toList());
 
@@ -192,11 +194,13 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
                         addCompetenceCourseData(report);
                     }
 
-                    private void addCompetenceCourseData(CompetenceCourseReport report) {
+                    private void addCompetenceCourseData(final CompetenceCourseReport report) {
                         addData("CompetenceCourseReport.code", report.getCode());
                         addData("CompetenceCourseReport.name", report.getName());
                         addData("CompetenceCourseReport.nameEN", report.getNameEn());
+                        addData("CompetenceCourseReport.isActive", report.getIsActive());
                         addData("CompetenceCourseReport.beginDate", report.getBeginExecutionPeriod());
+                        addData("CompetenceCourseReport.firstVersionDate", report.getFirstVersionExecutionPeriod());
                         addData("CompetenceCourseReport.department", report.getDepartment());
                         addData("CompetenceCourseReport.area", report.getScientificArea());
                         addData("CompetenceCourseReport.acronym", report.getAcronym());
@@ -234,7 +238,7 @@ public class CourseReportController extends FenixeduULisboaReportsBaseController
                         addCurricularCourseContextData(report);
                     }
 
-                    private void addCurricularCourseContextData(CurricularCourseContextReport report) {
+                    private void addCurricularCourseContextData(final CurricularCourseContextReport report) {
                         addData("curricularCourseContextReport.courseCode", report.getCompetenceCourseCode());
                         addData("curricularCourseContextReport.courseName", report.getCompetenceCourseName());
                         addData("curricularCourseContextReport.degreeCode", report.getDegreeCode());

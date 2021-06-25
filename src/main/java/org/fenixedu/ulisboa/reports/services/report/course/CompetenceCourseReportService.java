@@ -4,13 +4,17 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
+import org.fenixedu.academic.domain.ExecutionYear;
 
 public class CompetenceCourseReportService {
 
     private final Collection<CompetenceCourse> competenceCourses;
+    private final ExecutionYear executionYear;
 
-    public CompetenceCourseReportService(Collection<CompetenceCourse> competenceCourses) {
+    public CompetenceCourseReportService(final Collection<CompetenceCourse> competenceCourses,
+            final ExecutionYear executionYear) {
         this.competenceCourses = competenceCourses;
+        this.executionYear = executionYear;
     }
 
     public Collection<CompetenceCourseReport> generateReport() {
@@ -18,11 +22,11 @@ public class CompetenceCourseReportService {
     }
 
     private Collection<CompetenceCourseReport> process() {
-        return competenceCourses.stream().map(cc -> buildReport(cc)).collect(Collectors.toSet());
+        return competenceCourses.stream().map(cc -> buildReport(cc, executionYear)).collect(Collectors.toSet());
     }
 
-    private CompetenceCourseReport buildReport(final CompetenceCourse competenceCourse) {
-        return new CompetenceCourseReport(competenceCourse);
+    private CompetenceCourseReport buildReport(final CompetenceCourse competenceCourse, final ExecutionYear executionYear) {
+        return new CompetenceCourseReport(competenceCourse, executionYear);
     }
 
 }

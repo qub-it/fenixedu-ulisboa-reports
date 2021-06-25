@@ -11,6 +11,7 @@ public class CourseReportParametersBean implements IBean {
 
     private ExecutionYear executionYear;
     private List<TupleDataSourceBean> executionYearsDataSource;
+    private Boolean isActiveCompetenceCourses;
 
     public CourseReportParametersBean() {
         updateData();
@@ -26,8 +27,16 @@ public class CourseReportParametersBean implements IBean {
         return executionYear;
     }
 
-    public void setExecutionYear(ExecutionYear executionYear) {
+    public void setExecutionYear(final ExecutionYear executionYear) {
         this.executionYear = executionYear;
+    }
+
+    public Boolean getIsActiveCompetenceCourses() {
+        return this.isActiveCompetenceCourses;
+    }
+
+    public void setIsActiveCompetenceCourses(final Boolean isActiveCompetenceCourses) {
+        this.isActiveCompetenceCourses = isActiveCompetenceCourses;
     }
 
     public List<TupleDataSourceBean> getExecutionYearsDataSource() {
