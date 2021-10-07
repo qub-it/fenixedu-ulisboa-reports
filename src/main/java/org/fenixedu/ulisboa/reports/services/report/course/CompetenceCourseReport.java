@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
+import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseLoad;
 import org.fenixedu.academic.domain.degreeStructure.Context;
 import org.fenixedu.academic.util.Bundle;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
@@ -97,52 +98,112 @@ public class CompetenceCourseReport implements Comparable<CompetenceCourseReport
     }
 
     public Double getTheoreticalHours() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getTheoreticalHours();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getTheoreticalHours();
+        }
+
+        return result;
     }
 
     public Double getProblemsHours() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getProblemsHours();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getProblemsHours();
+        }
+
+        return result;
     }
 
     public Double getLaboratorialHours() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getLaboratorialHours();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getLaboratorialHours();
+        }
+
+        return result;
     }
 
     public Double getSeminaryHours() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getSeminaryHours();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getSeminaryHours();
+        }
+
+        return result;
     }
 
     public Double getFieldWorkHours() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getFieldWorkHours();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getFieldWorkHours();
+        }
+
+        return result;
     }
 
     public Double getTrainingPeriodHours() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getTrainingPeriodHours();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getTrainingPeriodHours();
+        }
+
+        return result;
     }
 
     public Double getTutorialOrientationHours() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getTutorialOrientationHours();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getTutorialOrientationHours();
+        }
+
+        return result;
     }
 
     public Double getOtherHours() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getOtherHours();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getOtherHours();
+        }
+
+        return result;
     }
 
     public Double getAutonomousWorkHours() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getAutonomousWorkHours();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getAutonomousWorkHours();
+        }
+
+        return result;
     }
 
     public Double getECTS() {
-        return getMostRecentCompetenceCourseInformation().getCompetenceCourseLoadsSet().stream().iterator().next()
-                .getEctsCredits();
+        Double result = 0.0;
+
+        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
+                .getCompetenceCourseLoadsSet()) {
+            result += competenceCourseLoad.getEctsCredits();
+        }
+
+        return result;
     }
 }
