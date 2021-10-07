@@ -1,3 +1,5 @@
+- Fix: the different CompetenceCourseLoad fields are now properly summed in the CompetenceCourseReport
+
 2.8.0 (25-06-2021)
 - Refactor: CompetenceCourseReport was remade and now works as intended + new active courses filter + new export data value for active courses and first version date of a course
 
