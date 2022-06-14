@@ -38,12 +38,12 @@ public class CompetenceCourseService {
         }
 
         if (isActiveCompetenceCourses) {
-            return CompetenceCourse.readApprovedBolonhaCompetenceCourses().stream()
+            return CompetenceCourse.findAll().stream().filter(cc -> cc.isApproved())
                     .filter(cc -> cc.getCurricularCourseContexts().stream().anyMatch(context -> context.isOpen(executionYear)))
                     .collect(Collectors.toSet());
         }
 
-        return CompetenceCourse.readApprovedBolonhaCompetenceCourses().stream()
+        return CompetenceCourse.findAll().stream().filter(cc -> cc.isApproved())
                 .filter(cc -> cc.findInformationMostRecentUntil(executionYear.getFirstExecutionPeriod()) != null)
                 .collect(Collectors.toSet());
     }
