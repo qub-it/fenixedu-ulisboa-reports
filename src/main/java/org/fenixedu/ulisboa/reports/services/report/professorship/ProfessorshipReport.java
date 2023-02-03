@@ -90,7 +90,7 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
 
     public String getTeacherDepartment() {
         return Optional.ofNullable(getProfessorship()).map(o -> o.getTeacher())
-                .flatMap(o -> o.getTeacherAuthorization(getExecutionPeriod().getAcademicInterval())).map(o -> o.getDepartment())
+                .flatMap(o -> o.getTeacherAuthorization(getExecutionPeriod().getAcademicInterval())).map(o -> o.getUnit())
                 .map(o -> o.getNameI18n().getContent()).orElse("");
     }
 
