@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
-import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseLoad;
 import org.fenixedu.academic.domain.degreeStructure.Context;
+import org.fenixedu.academic.domain.degreeStructure.CourseLoadType;
 import org.fenixedu.academic.util.Bundle;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
@@ -98,112 +98,51 @@ public class CompetenceCourseReport implements Comparable<CompetenceCourseReport
     }
 
     public Double getTheoreticalHours() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getTheoreticalHours();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getLoadHours(CourseLoadType.of(CourseLoadType.THEORETICAL))
+                .map(bd -> Double.valueOf(bd.doubleValue())).orElse(Double.valueOf(0));
     }
 
     public Double getProblemsHours() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getProblemsHours();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getLoadHours(CourseLoadType.of(CourseLoadType.THEORETICAL_PRACTICAL))
+                .map(bd -> Double.valueOf(bd.doubleValue())).orElse(Double.valueOf(0));
     }
 
     public Double getLaboratorialHours() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getLaboratorialHours();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getLoadHours(CourseLoadType.of(CourseLoadType.PRACTICAL_LABORATORY))
+                .map(bd -> Double.valueOf(bd.doubleValue())).orElse(Double.valueOf(0));
     }
 
     public Double getSeminaryHours() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getSeminaryHours();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getLoadHours(CourseLoadType.of(CourseLoadType.SEMINAR))
+                .map(bd -> Double.valueOf(bd.doubleValue())).orElse(Double.valueOf(0));
     }
 
     public Double getFieldWorkHours() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getFieldWorkHours();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getLoadHours(CourseLoadType.of(CourseLoadType.FIELD_WORK))
+                .map(bd -> Double.valueOf(bd.doubleValue())).orElse(Double.valueOf(0));
     }
 
     public Double getTrainingPeriodHours() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getTrainingPeriodHours();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getLoadHours(CourseLoadType.of(CourseLoadType.INTERNSHIP))
+                .map(bd -> Double.valueOf(bd.doubleValue())).orElse(Double.valueOf(0));
     }
 
     public Double getTutorialOrientationHours() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getTutorialOrientationHours();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getLoadHours(CourseLoadType.of(CourseLoadType.TUTORIAL_ORIENTATION))
+                .map(bd -> Double.valueOf(bd.doubleValue())).orElse(Double.valueOf(0));
     }
 
     public Double getOtherHours() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getOtherHours();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getLoadHours(CourseLoadType.of(CourseLoadType.OTHER))
+                .map(bd -> Double.valueOf(bd.doubleValue())).orElse(Double.valueOf(0));
     }
 
     public Double getAutonomousWorkHours() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getAutonomousWorkHours();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getLoadHours(CourseLoadType.of(CourseLoadType.AUTONOMOUS_WORK))
+                .map(bd -> Double.valueOf(bd.doubleValue())).orElse(Double.valueOf(0));
     }
 
     public Double getECTS() {
-        Double result = 0.0;
-
-        for (final CompetenceCourseLoad competenceCourseLoad : getMostRecentCompetenceCourseInformation()
-                .getCompetenceCourseLoadsSet()) {
-            result += competenceCourseLoad.getEctsCredits();
-        }
-
-        return result;
+        return getMostRecentCompetenceCourseInformation().getCredits().doubleValue();
     }
 }

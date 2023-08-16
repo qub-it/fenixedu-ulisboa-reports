@@ -1,4 +1,5 @@
 - Refactor: Make compatible with latest version of academic-core
+- Refactor: Refactor: Replace usage of deprecated CompetenceCourseLoad
 
 2.10.0 (18-10-2022)
 - Refactor: Remove unused Struts module configuration

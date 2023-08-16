@@ -1,11 +1,11 @@
 package org.fenixedu.ulisboa.reports.services.report.professorship;
 
+import java.math.BigDecimal;
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.Optional;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
-import org.fenixedu.academic.domain.CourseLoad;
 import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ExecutionYear;
@@ -15,7 +15,6 @@ import org.fenixedu.academic.domain.Shift;
 import org.fenixedu.academic.domain.ShiftEnrolment;
 import org.fenixedu.academic.domain.ShiftProfessorship;
 import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
-import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseLoad;
 import org.fenixedu.academic.domain.schedule.shiftCapacity.ShiftCapacity;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
 
@@ -129,7 +128,7 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
 
     public String getShiftName() {
         final Shift shift = getShift();
-        return shift == null ? null : shift.getNome();
+        return shift == null ? null : shift.getName();
     }
 
     public String getShiftTypeName() {
@@ -149,38 +148,6 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
         return minutesToHours(getTotalMinutes());
     }
 
-    private double getCompetenceCourseLoadHoursByShiftType(final CompetenceCourseLoad competenceCourseLoad) {
-        switch (getShift().getShiftTypesCodePrettyPrint()) {
-
-        case "T":
-
-            return competenceCourseLoad.getTheoreticalHours();
-        case "TP":
-
-            return competenceCourseLoad.getProblemsHours();
-        case "L":
-
-            return competenceCourseLoad.getLaboratorialHours();
-        case "S":
-
-            return competenceCourseLoad.getSeminaryHours();
-        case "TC":
-
-            return competenceCourseLoad.getFieldWorkHours();
-        case "E":
-
-            return competenceCourseLoad.getTrainingPeriodHours();
-        case "OT":
-
-            return competenceCourseLoad.getTutorialOrientationHours();
-        case "O":
-
-            return competenceCourseLoad.getOtherHours();
-        }
-
-        return 0;
-    }
-
     private double getTotalMinutes() {
 
         for (final CompetenceCourse competenceCourse : getExecutionCourse().getCompetenceCourses()) {
@@ -188,18 +155,9 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
             final CompetenceCourseInformation competenceCourseInformation =
                     competenceCourse.findInformationMostRecentUntil(getExecutionPeriod());
 
-            if (competenceCourseInformation.getCompetenceCourseLoadsSet().size() == 1) {
-                return getCompetenceCourseLoadHoursByShiftType(
-                        competenceCourseInformation.getCompetenceCourseLoadsSet().iterator().next()) * 60;
-            }
-
-            for (final CompetenceCourseLoad competenceCourseLoad : competenceCourseInformation.getCompetenceCourseLoadsSet()) {
-
-                if (getExecutionSemesterName().contains(String.valueOf(competenceCourseLoad.getLoadOrder()))) {
-                    return getCompetenceCourseLoadHoursByShiftType(competenceCourseLoad) * 60;
-                }
-
-            }
+            return competenceCourseInformation.getCourseLoadDurationsSet().stream()
+                    .filter(d -> d.getCourseLoadType().getAllowShifts()).map(d -> d.getHours().multiply(new BigDecimal(60)))
+                    .mapToDouble(bd -> bd.doubleValue()).sum();
         }
 
         return 0.0;
