@@ -59,17 +59,17 @@
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>bennu-core</artifactId>
-			<version>6.1.6-FORK</version>
+			<version>6.3.0-FORK</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>bennu-spring</artifactId>
-			<version>6.1.6-FORK</version>
+			<version>6.3.0-FORK</version>
 		</dependency>
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>41.3.0</version>
+			<version>44.2.0</version>
 		</dependency>
 
 		<dependency>
@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>org.fenixedu.ulisboa</groupId>
 			<artifactId>fenixedu-ulisboa-specifications</artifactId>
-			<version>7.3.0</version>
+			<version>7.4.0</version>
 		</dependency>
 
 	</dependencies>
