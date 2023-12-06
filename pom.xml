@@ -17,6 +17,19 @@
 
 	<name>FenixEdu ULisboa Reports</name>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.qubit.solution.fenixedu</groupId>
+				<artifactId>fenixedu-oss-dependency-management</artifactId>
+				<version>1</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
 	<build>
 		<plugins>
 			<plugin>
@@ -54,36 +67,27 @@
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-ulisboa-tools</artifactId>
-			<version>2.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>bennu-core</artifactId>
-			<version>6.1.6-FORK</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>bennu-spring</artifactId>
-			<version>6.1.6-FORK</version>
 		</dependency>
 		<dependency>
 			<groupId>com.qubit.solution.fenixedu</groupId>
 			<artifactId>fenixedu-academic-core</artifactId>
-			<version>41.3.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.fenixedu</groupId>
 			<artifactId>fenixedu-commons</artifactId>
-			<version>1.1.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.fenixedu.ulisboa</groupId>
 			<artifactId>fenixedu-ulisboa-specifications</artifactId>
-			<version>7.3.0</version>
 		</dependency>
-
 	</dependencies>
 
 	<repositories>
@@ -107,6 +111,4 @@
 			<url>https://nexjen.ulisboa.pt/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
-
-
 </project>
