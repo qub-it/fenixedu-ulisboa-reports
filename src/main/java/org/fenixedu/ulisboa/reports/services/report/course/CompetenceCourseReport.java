@@ -9,8 +9,6 @@ import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
 import org.fenixedu.academic.domain.degreeStructure.Context;
 import org.fenixedu.academic.domain.degreeStructure.CourseLoadType;
-import org.fenixedu.academic.util.Bundle;
-import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
 
 public class CompetenceCourseReport implements Comparable<CompetenceCourseReport> {
@@ -85,7 +83,7 @@ public class CompetenceCourseReport implements Comparable<CompetenceCourseReport
     }
 
     public String getType() {
-        return BundleUtil.getLocalizedString(Bundle.ENUMERATION, competenceCourse.getType().name()).getContent();
+        return competenceCourse.getCompetenceCourseType().getName().getContent();
     }
 
     public String getRegime() {
