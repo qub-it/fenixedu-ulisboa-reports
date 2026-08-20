@@ -1,15 +1,11 @@
 package org.fenixedu.ulisboa.reports.services.report.course;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.fenixedu.academic.domain.CompetenceCourse;
-import org.fenixedu.academic.domain.ExecutionInterval;
 import org.fenixedu.academic.domain.ExecutionYear;
-import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
-import org.fenixedu.academic.domain.degreeStructure.Context;
 
 import com.google.common.collect.Sets;
 
@@ -38,12 +34,12 @@ public class CompetenceCourseService {
         }
 
         if (isActiveCompetenceCourses) {
-            return CompetenceCourse.findAll().stream().filter(cc -> cc.isApproved())
+            return CompetenceCourse.findAll().stream()
                     .filter(cc -> cc.getCurricularCourseContexts().stream().anyMatch(context -> context.isOpen(executionYear)))
                     .collect(Collectors.toSet());
         }
 
-        return CompetenceCourse.findAll().stream().filter(cc -> cc.isApproved())
+        return CompetenceCourse.findAll().stream()
                 .filter(cc -> cc.findInformationMostRecentUntil(executionYear.getFirstExecutionPeriod()) != null)
                 .collect(Collectors.toSet());
     }
