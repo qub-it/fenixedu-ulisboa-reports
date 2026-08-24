@@ -14,6 +14,7 @@ import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Shift;
 import org.fenixedu.academic.domain.ShiftEnrolment;
 import org.fenixedu.academic.domain.ShiftProfessorship;
+import org.fenixedu.academic.domain.TeacherAuthorization;
 import org.fenixedu.academic.domain.degreeStructure.CompetenceCourseInformation;
 import org.fenixedu.academic.domain.schedule.shiftCapacity.ShiftCapacity;
 import org.fenixedu.ulisboa.reports.util.ULisboaReportsUtil;
@@ -88,9 +89,9 @@ public class ProfessorshipReport implements Comparable<ProfessorshipReport> {
     }
 
     public String getTeacherDepartment() {
-        return Optional.ofNullable(getProfessorship()).map(o -> o.getTeacher())
-                .flatMap(o -> o.getTeacherAuthorization(getExecutionPeriod().getAcademicInterval())).map(o -> o.getUnit())
-                .map(o -> o.getNameI18n().getContent()).orElse("");
+        return Optional.ofNullable(getProfessorship()).map(Professorship::getTeacher)
+                .flatMap(t -> t.getTeacherAuthorization(getExecutionPeriod())).map(TeacherAuthorization::getUnit)
+                .map(u -> u.getNameI18n().getContent()).orElse("");
     }
 
     public ExecutionInterval getExecutionPeriod() {
